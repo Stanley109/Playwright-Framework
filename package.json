@@ -7,7 +7,9 @@
     "@types/node": "^26.1.1"
   },
   "scripts": {
-    "test:chrome headless": "playwright test --project=chromium",
-    "test:chrome headed": "playwright test --project=chromium --headed"
+    "test:sit headless": "TEST_ENV=sit playwright test --project=chromium",
+    "test:sit headed":   "TEST_ENV=sit playwright test --project=chromium --headed",
+    "test:uat headless": "TEST_ENV=uat playwright test --project=chromium",
+    "test:uat headed":   "TEST_ENV=uat playwright test --project=chromium --headed"
   }
 }
