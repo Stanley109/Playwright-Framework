@@ -17,7 +17,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: process.env.BASE_URL || 'https://spanish-cards.netlify.apps',           //sets the base URL for all tests.
+    baseURL: process.env.BASE_URL || 'https://spanish-cards.netlify.appsssssss',           //sets the base URL for all tests.
     headless: false,             //by default, Playwright runs tests in headless mode even when this is not explicitly set.
     trace: 'on-first-retry',
     launchOptions: {

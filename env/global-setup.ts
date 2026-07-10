@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import { FullConfig } from 'playwright/test';
 
 async function globalSetup(config: FullConfig) {
-    const testEnv = process.env.TEST_ENV || 'sits';
+    const testEnv = process.env.TEST_ENV || 'sit';
 
     dotenv.config({ 
         path: `env/.env.${testEnv}`,
