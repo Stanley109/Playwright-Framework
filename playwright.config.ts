@@ -1,15 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
-
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+import env from './env/env.ts';
 
 export default defineConfig({
-  globalSetup: './utils/global-setup.ts',
+  globalSetup: './env/global-setup.ts',
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -17,8 +10,8 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: process.env.BASE_URL || 'https://spanish-cards.netlify.appsssssss',           //sets the base URL for all tests.
-    headless: false,             //by default, Playwright runs tests in headless mode even when this is not explicitly set.
+    baseURL: env.BASE_URL || 'https://spanish-cards.netlify.appsssfasdasddfasfd',           //sets the base URL for all tests.
+    headless: true,             //by default, Playwright runs tests in headless mode even when this is not explicitly set.
     trace: 'on-first-retry',
     launchOptions: {
       args: ['--start-maximized', '--disable-gpu', '--window-size=1920,1080']
@@ -32,15 +25,15 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
 
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
+    // {
+    //   name: 'firefox',
+    //   use: { ...devices['Desktop Firefox'] },
+    // },
 
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
+    // {
+    //   name: 'webkit',
+    //   use: { ...devices['Desktop Safari'] },
+    // },
 
     /* Test against mobile viewports. */
     // {

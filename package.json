@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "cross-env": "^10.1.0",
     "dotenv": "^17.4.2",
     "playwright": "^1.61.1"
   },
@@ -8,9 +9,9 @@
     "@types/node": "^26.1.1"
   },
   "scripts": {
-    "test:sit headless": "cross-env TEST_ENV=sit npx playwright test --project=chromium",
-    "test:sit headed":   "cross-env TEST_ENV=sit npx playwright test --project=chromium --headed",
-    "test:uat headless": "cross-env TEST_ENV=uat npx playwright test --project=chromium",
-    "test:uat headed":   "cross-env TEST_ENV=uat npx playwright test --project=chromium --headed"
+    "sit-headless": "npx cross-env TEST_ENV=sit playwright test --project=chromium",
+    "sit-headed": "npx cross-env TEST_ENV=sit playwright test --project=chromium --headed",
+    "uat-headless": "npx cross-env TEST_ENV=uat playwright test --project=chromium",
+    "uat-headed": "npx cross-env TEST_ENV=uat playwright test --project=chromium --headed"
   }
 }
