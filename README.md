@@ -9,10 +9,24 @@
 
 
 ## Framework walkthrough
+### Handling Environments, Dependencies, Misc, etc
 1. We want the user to have a choice whether to run this using sit or uat environment. command is `npx cross-env TEST_ENV=sit playwright test --project=chromium`
 2. Starting from the env folder, .env.sit and .env.uat defines the global setup parameters such as environment url, or credentials, etc
 3. In `playwright.config.ts`, we need to use playwright's `globalSetup`(line 5) so setup the environment
 4. `globalSetup` then points to `global-setup.ts`, which is a function named `globalSetup` that runs dotenv.config() to load all env variables from the env files.
 5. `env.ts` is a file that has a constant `env` that contains an object consisting of env properties
 6. Any spec file can then use `import env from '../env/env.ts';` to use any env variables
+
+### Handling Reporting
+7.  //TODO: Install and apply Allure reporting
+8.  //TODO: Install and apply Monocart reporting
+
+### Handling the actual tests
+9.  //TODO: Populate the page objects
+10. //TODO: Write multiple tests using multiple locator variations
+11. //TODO: Write API tests
+
+### Handling CICD
+11. //TODO: Create and configure yml file
+12. //TODO: Finalize yml and Github Actions integration
 
