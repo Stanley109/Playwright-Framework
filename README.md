@@ -17,16 +17,17 @@
 5. `env.ts` is a file that has a constant `env` that contains an object consisting of env properties
 6. Any spec file can then use `import env from '../env/env.ts';` to use any env variables
 
-### Handling Reporting
-7.  //TODO: Install and apply Allure reporting
-8.  //TODO: Install and apply Monocart reporting
-
 ### Handling the actual tests
-9.  //TODO: Populate the page objects
-10. //TODO: Write multiple tests using multiple locator variations
-11. //TODO: Write API tests
+7.  //TODO: Populate the page objects
+8. //TODO: Write multiple tests using multiple locator variations
+9. //TDOD: Tags and Hooks
+10. //TODO: Write API tests
+
+### Handling Reporting
+11.  //TODO: Install and apply Allure reporting
+12.  //TODO: Install and apply Monocart reporting
 
 ### Handling CICD
-11. //TODO: Create and configure yml file
-12. //TODO: Finalize yml and Github Actions integration
+13. //TODO: Create and configure yml file
+14. //TODO: Finalize yml and Github Actions integration
 
