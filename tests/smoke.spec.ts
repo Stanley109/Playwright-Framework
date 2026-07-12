@@ -19,30 +19,38 @@ test.describe('Spanish Cards', {tag: ['@smoke', '@regression']}, () => {
     })
 
     test('Next button is visible', async () => {
-        await app.spanishCardsClassStyle.verifyNextButtonisVisible();
-        await page.waitForTimeout(2000);
+        await app.spanishCardsClassStyle.verifyNextButtonIsVisible();
+        test.setTimeout(5000);              //set the timeout of the test duration
+        await page.waitForTimeout(2000);    //literally pause the playwright for x seconds
     })
 
     test('Previous button is visible', async () => {
-        await app.spanishCardsClassStyle.verifyPreviousButtonisVisible();
+        await app.spanishCardsClassStyle.verifyPreviousButtonIsVisible();
         await page.waitForTimeout(2000);
     })
 
     test('Random Card button is visible after 3 iterations', async () => {
         
-        test.step("check if random card is visible", async () =>{
-            await app.spanishCardsClassStyle.verifyRandomCardButtonisVisible();
+        await test.step("check if random card button is visible", async () =>{
+            await app.spanishCardsClassStyle.verifyRandomCardButtonIsVisible();
         })
 
-        test.step("iterate through the cards", async () => {
-            await app.spanishCardsClassStyle.verifyRandomCardButtonisVisibleafterThreeIterations();
+        await test.step("iterate through the cards", async () => {
+            await app.spanishCardsClassStyle.verifyRandomCardButtonIsVisibleafterThreeIterations();
         })
 
         await page.waitForTimeout(2000);
     })
 
     test('Card counter increases or decreases accordingly', async () => {
-        await app.spanishCardsClassStyle.verifyCardCounterIncreaseOrDescreaseAccordingly();
-        await page.waitForTimeout(2000);
+
+        await test.step("check if random card button is visible", async () =>{
+            await app.spanishCardsClassStyle.verifyRandomCardButtonIsVisible();
+        })
+
+        await test.step("randomize cards then iterate 3x next then 3x previous", async () =>{
+            await app.spanishCardsClassStyle.verifyCardCounterIncreaseOrDescreaseAccordingly();
+            await page.waitForTimeout(2000);
+        })
     })
 })

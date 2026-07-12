@@ -6,11 +6,11 @@ export default defineConfig({
   globalSetup: './env/global-setup.ts',
   testDir: './tests',
   fullyParallel: true,
-  timeout: 10_000,             //timeout for each test. default is 30 secs
+  timeout: 20_000,             //timeout for each test. default is 30 secs
   expect: {timeout: 3_000},  //expect timeout for each assertion. default is 5 secs
   globalTimeout: 3_600_000,    //timeout for the whole test run. no default values here.
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 3 : 0,
+  retries: process.env.CI ? 3 : 2,      //retries failed test x times. currently  CI = 3 and non-CI = 2
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {

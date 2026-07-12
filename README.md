@@ -18,10 +18,12 @@
 6. Any spec file can then use `import env from '../env/env.ts';` to use any env variables
 
 ### Handling the actual tests
-7.  //TODO: Populate the page objects
-8. //TODO: Write multiple tests using multiple locator variations
+7.  Page object model is under the page-objects folder. `Spanish-Cards-Class-Styles.ts` is the main page object file while `App.ts` acts as the facade that handles all page object instantiaion.
+This is so that spec files only needs to intantiate App.ts 
+8.  2 spec files (`smoke.spec.ts` and `standalone-smoke.spec.ts`)were created for comparison of test flow behavior. `smoke.spec.ts` uses before/after all while `standalone-smoke.spec.ts`(better practice) uses before/after each.
+9. `smoke.spec.ts` tests are tagged as '@smoke and @regression' while `standalone-smoke.spec.ts` are tagged as '@standalone and @regression'. To run all, run the command:
+`npx cross-env TEST_ENV=sit playwright test --project=chromium --headed --grep '@regression'`
 9. //TODO: Use Json test data
-10. //TDOD: Tags and Hooks
 11. //TODO: Write API tests
 
 ### Handling Reporting
