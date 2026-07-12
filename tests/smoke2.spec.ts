@@ -1,48 +1,40 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 import { App } from '../page-objects/App';
 
-test.describe('Spanish Cards', {tag: ['@smoke', '@regression']}, () => {
+test.describe('Spanish Cards standalone tests', {tag: ['@standalone', '@regression']}, () => {
 
     test.describe.configure({ mode: 'default' });
     let app: App;
-    let page: any;
+    let page: Page;
 
-    test.beforeAll(async ({ browser }) => {
+    test.beforeEach(async ({ browser }) => {
         page = await browser.newPage();
         app = new App(page);
         await page.goto('/')
         await page.waitForLoadState('networkidle')
     })
 
-    test.afterAll(async () => {
-        page.close()
+    test.afterEach(async () =>{
+        page.close();
     })
 
     test('Next button is visible', async () => {
         await app.spanishCardsClassStyle.verifyNextButtonisVisible();
-        await page.waitForTimeout(2000);
+        await page.waitForTimeout(3000);
     })
 
     test('Previous button is visible', async () => {
         await app.spanishCardsClassStyle.verifyPreviousButtonisVisible();
-        await page.waitForTimeout(2000);
+        await page.waitForTimeout(3000);
     })
 
     test('Random Card button is visible after 3 iterations', async () => {
-        
-        test.step("check if random card is visible", async () =>{
-            await app.spanishCardsClassStyle.verifyRandomCardButtonisVisible();
-        })
-
-        test.step("iterate through the cards", async () => {
-            await app.spanishCardsClassStyle.verifyRandomCardButtonisVisibleafterThreeIterations();
-        })
-
-        await page.waitForTimeout(2000);
+        await app.spanishCardsClassStyle.verifyRandomCardButtonisVisibleafterThreeIterations();
+        await page.waitForTimeout(3000);
     })
 
     test('Card counter increases or decreases accordingly', async () => {
         await app.spanishCardsClassStyle.verifyCardCounterIncreaseOrDescreaseAccordingly();
-        await page.waitForTimeout(2000);
+        await page.waitForTimeout(3000);
     })
 })

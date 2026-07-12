@@ -11,7 +11,12 @@
   "scripts": {
     "sit-headless": "npx cross-env TEST_ENV=sit playwright test --project=chromium",
     "sit-headed": "npx cross-env TEST_ENV=sit playwright test --project=chromium --headed",
+    "sit-headed-smoke":"npx cross-env TEST_ENV=sit playwright test --project=chromium --headed --grep '@smoke'",
+    "sit-headless-smoke":"npx cross-env TEST_ENV=sit playwright test --project=chromium --grep '@smoke'",
+    
     "uat-headless": "npx cross-env TEST_ENV=uat playwright test --project=chromium",
-    "uat-headed": "npx cross-env TEST_ENV=uat playwright test --project=chromium --headed"
+    "uat-headed": "npx cross-env TEST_ENV=uat playwright test --project=chromium --headed",
+    "uat-headed-smoke":"npx cross-env TEST_ENV=uat playwright test --project=chromium --headed --grep '@smoke'",
+    "uat-headless-smoke":"npx cross-env TEST_ENV=uat playwright test --project=chromium --grep '@smoke'"
   }
 }

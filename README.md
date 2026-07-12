@@ -20,8 +20,9 @@
 ### Handling the actual tests
 7.  //TODO: Populate the page objects
 8. //TODO: Write multiple tests using multiple locator variations
-9. //TDOD: Tags and Hooks
-10. //TODO: Write API tests
+9. //TODO: Use Json test data
+10. //TDOD: Tags and Hooks
+11. //TODO: Write API tests
 
 ### Handling Reporting
 11.  //TODO: Install and apply Allure reporting
