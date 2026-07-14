@@ -5,31 +5,29 @@ test.describe('Spanish Cards standalone tests', {tag: ['@standalone', '@regressi
 
     test.describe.configure({ mode: 'default' });
     let app: App;
-    let page: any;
 
-    test.beforeEach(async ({ browser }) => {
-        page = await browser.newPage();
+    test.beforeEach(async ({ page }) => {
         app = new App(page);
         await page.goto('/')
         await page.waitForLoadState('networkidle')
     })
 
-    test.afterEach(async () => {
+    test.afterEach(async ({page}) => {
         page.close()
     })
 
-    test('Next button is visible', async () => {
+    test('Next button is visible', async ({page}) => {
         await app.spanishCardsClassStyle.verifyNextButtonIsVisible();
         test.setTimeout(5000);              //set the timeout of the test duration
         await page.waitForTimeout(2000);    //literally pause the playwright for x seconds
     })
 
-    test('Previous button is visible', async () => {
+    test('Previous button is visible', async ({page}) => {
         await app.spanishCardsClassStyle.verifyPreviousButtonIsVisible();
         await page.waitForTimeout(2000);
     })
 
-    test('Random Card button is visible after 3 iterations', async () => {
+    test('Random Card button is visible after 3 iterations', async ({page}) => {
         
         await test.step("check if random card button is visible", async () =>{
             await app.spanishCardsClassStyle.verifyRandomCardButtonIsVisible();
@@ -42,7 +40,7 @@ test.describe('Spanish Cards standalone tests', {tag: ['@standalone', '@regressi
         await page.waitForTimeout(2000);
     })
 
-    test('Card counter increases or decreases accordingly', async () => {
+    test('Card counter increases or decreases accordingly', async ({page}) => {
 
         await test.step("check if random card button is visible", async () =>{
             await app.spanishCardsClassStyle.verifyRandomCardButtonIsVisible();
