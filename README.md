@@ -8,6 +8,7 @@ A playwright framework with CICD using github actions.
 4. `npm install dotenv` so that env files can be read and process.env variables can be loaded
 5. `npm install -D @types/node` or `npm install --save-dev @types/node` so that it can identify what 'process' contains
 6. `npm install cross-env` so that user can use cross-env; which can invoke environment parameters on the go. example: `npx cross-env TEST_ENV=sit playwright test --project=chromium`
+7. `tsconfig.json` so that you won't have 'unrecognized libraries' problems
 
 
 
@@ -26,12 +27,12 @@ This is so that spec files only needs to intantiate App.ts
 8.  2 spec files (`smoke.spec.ts` and `standalone-smoke.spec.ts`)were created for comparison of test flow behavior. `smoke.spec.ts` uses before/after all while `standalone-smoke.spec.ts`(better practice) uses before/after each.
 9. `smoke.spec.ts` tests are tagged as '@smoke and @regression' while `standalone-smoke.spec.ts` are tagged as '@standalone and @regression'. To run all, run the command:
 `npx cross-env TEST_ENV=sit playwright test --project=chromium --headed --grep '@regression'`
-9. //TODO: Use Json test data
-11. //TODO: Write API tests
+10. check `Parse some json data and random generation data` test under `smoke.spec.ts`
+10. //TODO: Write API tests
 
 ### Handling Reporting
-11.  //TODO: Install and apply Allure reporting
-12.  //TODO: Install and apply Monocart reporting
+11.  Install Monocart using `npm install --save-dev monocart-reporter`
+12.  Add these in the `playwright.config.ts` `['monocart-reporter', { name: 'Playwright Test Report', outputFile: 'monocart-report/index.html'}],`
 
 ### Handling CICD
 13. //TODO: Create and configure yml file

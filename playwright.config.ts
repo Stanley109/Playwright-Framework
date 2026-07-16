@@ -1,5 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-import env from './env/env.ts';
+import env from './env/env';
 
 export default defineConfig({
   
@@ -11,16 +11,25 @@ export default defineConfig({
   globalTimeout: 3_600_000,    //timeout for the whole test run. no default values here.
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 3 : 2,      //retries failed test x times. currently  CI = 3 and non-CI = 2
-  workers: process.env.CI ? 1 : undefined,
-  reporter: 'html',
+  workers: process.env.CI ? 2 : 2,
+  reporter: [
+    ['line'], // Terminal progress logger
+    ['monocart-reporter', { name: 'Playwright Test Report', outputFile: 'monocart-report/index.html'}],   //Monocart report
+    ['html', { outputFolder: 'playwright-report', open: 'never' }]    // Playwright's built-in HTML report
+  ],
+  
   use: {
     baseURL: env.BASE_URL || 'https://spanish-cards.netlify.appsssfasdasddfasfd',           //sets the base URL for all tests.
-    headless: false,             //by default, Playwright runs tests in headless mode even when this is not explicitly set.
-    trace: 'on-first-retry',
+    headless: process.env.CI ? true : process.env.HEADLESS !== 'false',             //by default, Playwright runs tests in headless mode even when this is not explicitly set.
     launchOptions: {
       args: ['--start-maximized', '--disable-gpu', '--window-size=1920,1080']
     },
-    actionTimeout: 2_000        //timeout for each action(click, etc), 0 by default
+    actionTimeout: 2_000,       //timeout for each action(click, etc), 0 by default
+
+    //for reporting purposes
+    screenshot: 'on',
+    video: 'retain-on-first-failure',
+    trace: 'retain-on-first-failure'
     
   },
 

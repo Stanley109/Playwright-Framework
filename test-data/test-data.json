@@ -1,0 +1,23 @@
+{
+    "Details" :{
+        "firstName" : "John",
+        "lastName" :"Doe",
+        "accounts": {
+            "account1" : "john doe account 1",
+            "account2" : "john doe account 2",
+            "multipleAccount3" : [
+               "multi account 1",
+               "multi account 2"
+            ],
+            "multipleObjects":[
+                {
+                    "test1": "test 1",
+                    "test2": "test 2"
+                },
+                {
+                    "test3": "test 3"
+                }
+            ]
+        }
+    }
+}

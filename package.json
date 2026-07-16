@@ -6,17 +6,21 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",
-    "@types/node": "^26.1.1"
+    "@types/node": "^26.1.1",
+    "monocart-reporter": "^2.12.2"
   },
   "scripts": {
-    "sit-headless": "npx cross-env TEST_ENV=sit playwright test --project=chromium",
-    "sit-headed": "npx cross-env TEST_ENV=sit playwright test --project=chromium --headed",
-    "sit-headed-smoke":"npx cross-env TEST_ENV=sit playwright test --project=chromium --headed --grep '@smoke'",
-    "sit-headless-smoke":"npx cross-env TEST_ENV=sit playwright test --project=chromium --grep '@smoke'",
+    "sit-headless": "npx cross-env TEST_ENV=sit HEADLESS=true playwright test --project=chromium",
+    "sit-headed": "npx cross-env TEST_ENV=sit HEADLESS=false playwright test --project=chromium",
+
+    "sit-headless-smoke": "npx cross-env TEST_ENV=sit HEADLESS=true playwright test --project=chromium --grep '@smoke'",
+    "sit-headed-smoke": "npx cross-env TEST_ENV=sit HEADLESS=false playwright test --project=chromium --grep '@smoke'",
+
+    "uat-headless": "npx cross-env TEST_ENV=uat HEADLESS=true playwright test --project=chromium",
+    "uat-headed": "npx cross-env TEST_ENV=uat HEADLESS=false playwright test --project=chromium",
     
-    "uat-headless": "npx cross-env TEST_ENV=uat playwright test --project=chromium",
-    "uat-headed": "npx cross-env TEST_ENV=uat playwright test --project=chromium --headed",
-    "uat-headed-smoke":"npx cross-env TEST_ENV=uat playwright test --project=chromium --headed --grep '@smoke'",
-    "uat-headless-smoke":"npx cross-env TEST_ENV=uat playwright test --project=chromium --grep '@smoke'"
+    "uat-headless-smoke": "npx cross-env TEST_ENV=uat HEADLESS=true playwright test --project=chromium --grep '@smoke'",
+    "uat-headed-smoke": "npx cross-env TEST_ENV=uat HEADLESS=false playwright test --project=chromium --grep '@smoke'"
+    
   }
 }

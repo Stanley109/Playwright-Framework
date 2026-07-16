@@ -1,34 +1,36 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { App } from '../page-objects/App';
 import utils from '../utils/utils';
 
-test.describe('Spanish Cards standalone tests', {tag: ['@smoke', '@regression']}, () => {
+test.describe('Spanish Cards - all test coupled in 1 browser', {tag: ['@coupled', '@regression']}, () => {
 
-    test.describe.configure({ mode: 'parallel' });
+    test.describe.configure({ mode: 'default' });
     let app: App;
+    let page: any;
 
-    test.beforeEach(async ({ page }) => {
+    test.beforeAll(async ({ browser }) => {
+        page = await browser.newPage();
         app = new App(page);
         await page.goto('/')
         await page.waitForLoadState('networkidle')
     })
 
-    test.afterEach(async ({page}) => {
+    test.afterAll(async () => {
         page.close()
     })
 
-    test('Next button is visible', async ({page}) => {
+    test('Next button is visible', async () => {
         await app.spanishCardsClassStyle.verifyNextButtonIsVisible();
         test.setTimeout(5000);              //set the timeout of the test duration
         await page.waitForTimeout(2000);    //literally pause the playwright for x seconds
     })
 
-    test('Previous button is visible', async ({page}) => {
+    test('Previous button is visible', async () => {
         await app.spanishCardsClassStyle.verifyPreviousButtonIsVisible();
         await page.waitForTimeout(2000);
     })
 
-    test('Random Card button is visible after 3 iterations', async ({page}) => {
+    test('Random Card button is visible after 3 iterations', async () => {
         
         await test.step("check if random card button is visible", async () =>{
             await app.spanishCardsClassStyle.verifyRandomCardButtonIsVisible();
@@ -41,7 +43,7 @@ test.describe('Spanish Cards standalone tests', {tag: ['@smoke', '@regression']}
         await page.waitForTimeout(2000);
     })
 
-    test('Card counter increases or decreases accordingly', async ({page}) => {
+    test('Card counter increases or decreases accordingly', async () => {
 
         await test.step("check if random card button is visible", async () =>{
             await app.spanishCardsClassStyle.verifyRandomCardButtonIsVisible();
