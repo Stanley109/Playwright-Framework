@@ -36,6 +36,15 @@ This is so that spec files only needs to intantiate App.ts
 13.  Add these in the `playwright.config.ts` `['monocart-reporter', { name: 'Playwright Test Report', outputFile: 'monocart-report/index.html'}],`
 
 ### Handling CICD
-14. //TODO: Create and configure yml file
-15. //TODO: Finalize yml and Github Actions integration
+13. Before handling any env, make sure that there is a single point of integration where all env variables are stored in 1 file. In this case, its env.ts.  All file will reference its env values there and nothing else if possible. So that it can be easily handled.
+14. Realistically, env files are not pushed to the repository since it contains sensitive data. In this case, we would disable the logic of reading an env file when running this in CI. Under env > `global-setup.ts` , added if (!process.env.CI) to disable it in CI.
+15. Now, after that we have to replace all declared `process.env.<variable>` in the CI since we will not use .env in the CI. 
+16. To do that, supply the necessary variables under the github repo website > settings > Environments. From there create 2 environment (sit and uat) to mimic the setup of .env files locally. Then in the yml, we can then do something like this 
+        env:
+            CI: true
+            ENV_NAME: ${{secrets.ENV_NAME}}
+            BASE_URL: ${{secrets.BASE_URL}}
+            ENV_TEST_MSG: ${{vars.ENV_TEST_MSG}}
+17. use secrets.<varname> when invoking data stored under secrets while vars.<varname> when invoking environment variable accordingly.
+18. After the run, artifacts will be stored as well so that user can view the test results.
 
