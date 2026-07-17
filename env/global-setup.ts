@@ -6,10 +6,12 @@ import { FullConfig } from 'playwright/test';
 async function globalSetup(config: FullConfig) {
     const testEnv = process.env.TEST_ENV || 'sit';
 
-    dotenv.config({ 
-        path: `env/.env.${testEnv}`,
-        override: true
-    });
+    if (!process.env.CI) {
+        dotenv.config({ 
+            path: `env/.env.${testEnv}`,
+            override: true
+        });
+    }
 }
 
 export default globalSetup;

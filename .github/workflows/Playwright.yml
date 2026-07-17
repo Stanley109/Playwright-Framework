@@ -2,7 +2,7 @@ name: Playwright CI
 
 on:
     push:
-        branches: [ master , features/anything]
+        branches: [features/anything]
     pull_request:
         branches: [ master ]
     schedule:
@@ -35,13 +35,51 @@ jobs:
         name: Playwright Tests (${{github.event.inputs.suite || 'smoke'}} / ${{github.event.inputs.environment || 'sit'}})
         runs-on: ubuntu-latest
         container:
-            image: mcr.microsoft.com/playwright:v1.61.0-noble
+            image: mcr.microsoft.com/playwright:v1.61.0-noble        #the version has to be exactly the same as in the package.json file. Also, since we're pulling a docker image, we don't need to install browsers anymore ( run: npx playwright install --with-deps)
             options: --user root
         timeout-minutes: 60
+        environment: ${{ github.event.inputs.environment || 'sit' }}
 
         env:
             CI: true
+            ENV_NAME: ${{secrets.ENV_NAME}}
+            BASE_URL: ${{secrets.BASE_URL}}
+            ENV_TEST_MSG: ${{vars.ENV_TEST_MSG}}
         
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
+
+            - name: Set up node.js
+              uses: actions/setup-node@v4     #setup node.js environment.
+              with:
+                node-version: 22          #specify the node.js version to use.
+                cache: npm
+
+            - name: Install dependencies
+              run: npm ci --ignore-scripts
+
+            - name: Echo the envs
+              run: echo "hello world!$ENV_NAME"
+
+            - name: Run ${{github.event.inputs.suite}} tests
+              run: npx playwright test --project=chromium --grep '@${{github.event.inputs.suite}}'
+
+            - name: Upload monocart HTML report
+              uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                name: monocart-report-${{ github.run_number }}
+                path: monocart-report/
+                retention-days: 2
+                if-no-files-found: warn
+            
+            - name: Upload Playwright HTML report
+              uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                name: playwright-report-${{ github.run_number }}
+                path: playwright-report/
+                retention-days: 2
+                if-no-files-found: warn
+
