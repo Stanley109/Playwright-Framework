@@ -60,7 +60,13 @@ jobs:
               run: npm ci --ignore-scripts
 
             - name: Echo the envs
-              run: echo "hello world!$ENV_NAME"
+              run: |
+                echo "hello world!"
+                echo "CI is: $CI"
+                echo "ENV_NAME is: $ENV_NAME"
+                echo "BASE_URL is: $BASE_URL"
+                echo "ENV_TEST_MSG is: $ENV_TEST_MSG"
+              
 
             - name: Run ${{github.event.inputs.suite}} tests
               run: npx playwright test --project=chromium --grep '@${{github.event.inputs.suite}}'
