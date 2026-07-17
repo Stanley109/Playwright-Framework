@@ -2,7 +2,7 @@ name: Playwright CI
 
 on:
     push:
-        branches: [features/anything]
+        branches: [ master, features/anything]
     pull_request:
         branches: [ master ]
     schedule:
