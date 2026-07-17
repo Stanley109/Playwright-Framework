@@ -11,7 +11,6 @@ A playwright framework with CICD using github actions.
 7. `tsconfig.json` so that you won't have 'unrecognized libraries' problems
 
 
-
 ## Framework walkthrough
 ### Handling Environments, Dependencies, Misc, etc
 1. We want the user to have a choice whether to run this using sit or uat environment. command is `npx cross-env TEST_ENV=sit playwright test --project=chromium`
@@ -21,6 +20,7 @@ A playwright framework with CICD using github actions.
 5. `env.ts` is a file that has a constant `env` that contains an object consisting of env properties
 6. Any spec file can then use `import env from '../env/env.ts';` to use any env variables
 
+
 ### Handling the actual tests
 7.  Page object model is under the page-objects folder. `Spanish-Cards-Class-Styles.ts` is the main page object file while `App.ts` acts as the facade that handles all page object instantiaion.
 This is so that spec files only needs to intantiate App.ts 
@@ -28,13 +28,14 @@ This is so that spec files only needs to intantiate App.ts
 9. `smoke.spec.ts` tests are tagged as '@smoke and @regression' while `standalone-smoke.spec.ts` are tagged as '@standalone and @regression'. To run all, run the command:
 `npx cross-env TEST_ENV=sit playwright test --project=chromium --headed --grep '@regression'`
 10. check `Parse some json data and random generation data` test under `smoke.spec.ts`
-10. //TODO: Write API tests
+11. //TODO: Write API tests
+
 
 ### Handling Reporting
-11.  Install Monocart using `npm install --save-dev monocart-reporter`
-12.  Add these in the `playwright.config.ts` `['monocart-reporter', { name: 'Playwright Test Report', outputFile: 'monocart-report/index.html'}],`
+12.  Install Monocart using `npm install --save-dev monocart-reporter`
+13.  Add these in the `playwright.config.ts` `['monocart-reporter', { name: 'Playwright Test Report', outputFile: 'monocart-report/index.html'}],`
 
 ### Handling CICD
-13. //TODO: Create and configure yml file
-14. //TODO: Finalize yml and Github Actions integration
+14. //TODO: Create and configure yml file
+15. //TODO: Finalize yml and Github Actions integration
 
