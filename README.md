@@ -28,8 +28,15 @@ This is so that spec files only needs to intantiate App.ts
 9. `smoke.spec.ts` tests are tagged as '@smoke and @regression' while `standalone-smoke.spec.ts` are tagged as '@standalone and @regression'. To run all, run the command:
 `npx cross-env TEST_ENV=sit playwright test --project=chromium --headed --grep '@regression'`
 10. check `Parse some json data and random generation data` test under `smoke.spec.ts`
-11. //TODO: Write API tests
-
+11. For API testing, we follow a 'fluent interface design pattern' which `request-handler.ts` follows. This allows users to method chaining.
+    Example: 
+    const response = await api
+        .url('https://random.com/api')
+        .path('/articles')
+        .params({limit:10, offset:0, foo:'bar'})
+        .getRequest(200)
+    11.a if the point of integration of ui tests is the `app.ts`, then the point of integration of api tests is a fixture which is `api-fixtures.ts`.
+    11.b basically if there will be another base url domain, just append it in the `api-fixtures.ts` then call it on your test('test', async({api})
 
 ### Handling Reporting
 12.  Install Monocart using `npm install --save-dev monocart-reporter`

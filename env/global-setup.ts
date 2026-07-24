@@ -3,7 +3,7 @@
 import dotenv from 'dotenv';
 import { FullConfig } from 'playwright/test';
 
-async function globalSetup(config: FullConfig) {
+async function globalSetup() {
     const testEnv = process.env.TEST_ENV || 'sit';
 
     if (!process.env.CI) {
