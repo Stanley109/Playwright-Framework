@@ -1,20 +1,24 @@
 import { APIRequestContext, expect } from '@playwright/test';
+import { APILogger } from './api-logger';
+import { log } from 'node:console';
 
 
 //this is an example of fluent interface design pattern. It is a famous API design style that allows methhod chaining.
 export class RequestHandler {
 
     private request: APIRequestContext
+    private logger: APILogger
     private baseUrl!: string
     private defaultBaseUrl: string
     private apiPath: string = ''
-    private queryParams: object = {}
-    private apiHeaders: Record<string,string> = {}
+    private queryParams: object = {}                    // Record<any,any>  or 'any' also works
+    private apiHeaders: Record<string,string> = {}      //or { [key: string]: string } or just type 'any'
     private apiBody: object = {}
 
-    constructor(request: APIRequestContext, apiBaseUrl: string){
+    constructor(request: APIRequestContext, apiBaseUrl: string, logger: APILogger){
         this.request = request
         this.defaultBaseUrl = apiBaseUrl
+        this.logger = logger
     }
 
     url(url: string){
@@ -44,55 +48,93 @@ export class RequestHandler {
 
     async getRequest(statusCode: number){
         const url = this.getUrl()
-        const response = await this.request.get(url,{
+        this.logger.logRequest('GET', url, this.apiHeaders)       //log the request
+        const response = await this.request.get(url,{             //do the actual GET request
             headers: this.apiHeaders
         })
-        expect (response.status()).toEqual(statusCode)
-        const responseJSON = await response.json()
 
+        const actualStatus =  response.status()         //the reason why response.status doesn't need await is because request.get already wait for the response.header (eg. the code status)
+        const responseJSON = await response.json()      //however, for the body, since request.get doesn't wait for the body response, hence we need to do the await here.
+        
+        this.logger.logResponse(actualStatus, responseJSON)                   //log the response
+        this.statusCodeValidator(actualStatus, statusCode, this.getRequest)   //replaces the expect(actualStatus).toEqual(statusCode)
+        
+        //this.logger.removeLogs()                        //if you want to clear this whole method's log record for the current test instance, use this
+        //expect (actualStatus).toEqual(statusCode)       //not needed anymore as statusCodeValidator is implemented
+        
         return responseJSON
     }
 
     async postRequest(statusCode: number){
         const url = this.getUrl()
+        this.logger.logRequest('POST', url, this.apiHeaders, this.apiBody)
         const response = await this.request.post(url,{
             headers: this.apiHeaders,
             data: this.apiBody
         })
-        expect (response.status()).toEqual(statusCode)
-        const responseJSON = await response.json()
+               
+        const actualStatus =  response.status()
+        const responseJSON = await response.json()      
+        
+        this.logger.logResponse(actualStatus, responseJSON)                    
+        this.statusCodeValidator(actualStatus, statusCode, this.postRequest)  
 
         return responseJSON
     }
 
     async putRequest(statusCode: number){
         const url = this.getUrl()
+        this.logger.logRequest('PUT', url, this.apiHeaders, this.apiBody)
         const response = await this.request.put(url,{
             headers: this.apiHeaders,
             data: this.apiBody
         })
-        expect (response.status()).toEqual(statusCode)
-        const responseJSON = await response.json()
+
+        const actualStatus =  response.status()         
+        const responseJSON = await response.json()      
+        
+        this.logger.logResponse(actualStatus, responseJSON)                     
+        this.statusCodeValidator(actualStatus, statusCode, this.putRequest)     
 
         return responseJSON
     }
 
     async deleteRequest(statusCode: number){
         const url = this.getUrl()
+        this.logger.logRequest('DELETE', url, this.apiHeaders)
         const response = await this.request.delete(url,{
             headers: this.apiHeaders,
             data: this.apiBody
         })
 
-        expect (response.status()).toEqual(statusCode)
+        const actualStatus =  response.status()         
+        const responseJSON = await response.text()                // we need to change from response.json to response.text because delete can have no body
+        
+        this.logger.logResponse(actualStatus, responseJSON)                     
+        this.statusCodeValidator(actualStatus, statusCode, this.deleteRequest)     
     }
 
-    private getUrl(){
+    private getUrl(){                                   //constructs the url path. appends necessary params
         const url = new URL(`${this.baseUrl || this.defaultBaseUrl}${this.apiPath}`)
         for(const [key, value] of Object.entries(this.queryParams)){
-            url.searchParams.append(key,value)
+            url.searchParams.append(key,value)          //automatically appends url params with ?<key>:value&<key>:<value ...
         }
         console.log(`url is now: ${url.toString()}`)
         return url.toString()
+    }
+
+    private statusCodeValidator(actualStatus: number, expectedStatus: number, callingMethod: Function){
+
+        const logs = this.logger.getRecentLogs()
+
+        if(actualStatus!== expectedStatus){
+            const error = new Error(`Expected status ${expectedStatus} but got ${actualStatus}\n\n Recent API Activity: \n${logs}`)
+            Error.captureStackTrace(error, callingMethod)
+            throw error
+        }
+
+       // if you want to log every time (even if passed), just console.log it
+       // console.log(`Success! Expected status ${expectedStatus} and got ${actualStatus}\n\n Recent API Activity: \n${logs}`)
+        
     }
 }

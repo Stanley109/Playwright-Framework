@@ -19,7 +19,7 @@ test.describe('Spanish Cards standalone tests', {tag: ['@smoke', '@regression']}
 
     test('Next button is visible', async ({page}) => {
         await app.spanishCardsClassStyle.verifyNextButtonIsVisible();
-        test.setTimeout(5000);              //set the timeout of the test duration
+        test.setTimeout(10000);              //set the timeout of the test duration. this is an overwrite for the 20 sec timeout set in playwright.config.ts
         await page.waitForTimeout(2000);    //literally pause the playwright for x seconds
     })
 

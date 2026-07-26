@@ -7,7 +7,7 @@ import {expect} from '@playwright/test';
 
 let authToken: string
 
-test.beforeAll('Get Token', async({api}) => {
+test.beforeAll('Get Token', async({api}) => {        //'api' fixture came from the import {test} from api-fixtures.ts
     const tokenResponse = await api
         .path('/users/login')
         .body({"user":{"email":"pwapiuser@test.com", "password":"Welcome"}})
