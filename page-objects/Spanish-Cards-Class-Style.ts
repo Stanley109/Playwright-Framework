@@ -41,7 +41,7 @@ export class SpanishCardsClassStyle {
     }
 
     public async verifyCardCounterIncreaseOrDescreaseAccordingly() {
-        expect(await this.cardCounter.isVisible()).toBeTruthy();
+        expect(await this.cardCounter.isVisible()).toBeTruthy();    
 
         //click the random button
         await this.randomCardButton.click();

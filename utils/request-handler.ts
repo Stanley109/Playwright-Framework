@@ -8,7 +8,7 @@ export class RequestHandler {
 
     private request: APIRequestContext
     private logger: APILogger
-    private baseUrl!: string
+    private baseUrl: string | undefined
     private defaultBaseUrl: string
     private apiPath: string = ''
     private queryParams: object = {}                    // Record<any,any>  or 'any' also works
@@ -52,7 +52,8 @@ export class RequestHandler {
         const response = await this.request.get(url,{             //do the actual GET request
             headers: this.apiHeaders
         })
-
+        this.cleanupFields()                            // reset the parameters after each request call because usually in 1 end to end api test, lots of endpoints are called and is only using the same request-handler instance.
+        
         const actualStatus =  response.status()         //the reason why response.status doesn't need await is because request.get already wait for the response.header (eg. the code status)
         const responseJSON = await response.json()      //however, for the body, since request.get doesn't wait for the body response, hence we need to do the await here.
         
@@ -72,7 +73,8 @@ export class RequestHandler {
             headers: this.apiHeaders,
             data: this.apiBody
         })
-               
+        this.cleanupFields()       
+        
         const actualStatus =  response.status()
         const responseJSON = await response.json()      
         
@@ -89,6 +91,7 @@ export class RequestHandler {
             headers: this.apiHeaders,
             data: this.apiBody
         })
+        this.cleanupFields()
 
         const actualStatus =  response.status()         
         const responseJSON = await response.json()      
@@ -106,6 +109,7 @@ export class RequestHandler {
             headers: this.apiHeaders,
             data: this.apiBody
         })
+        this.cleanupFields()
 
         const actualStatus =  response.status()         
         const responseJSON = await response.text()                // we need to change from response.json to response.text because delete can have no body
@@ -123,13 +127,21 @@ export class RequestHandler {
         return url.toString()
     }
 
+    private cleanupFields(){        //we need to call this method are every api request call so that paramaters are reset. otherwise if 1 test contains multiple request calls, since 1 test = only 1 instance of request-handler, the params might get shared.
+        this.apiBody = {}
+        this.apiHeaders = {}
+        this.baseUrl = undefined
+        this.apiPath = ''
+        this.queryParams = {}
+    }
+
     private statusCodeValidator(actualStatus: number, expectedStatus: number, callingMethod: Function){
 
         const logs = this.logger.getRecentLogs()
 
         if(actualStatus!== expectedStatus){
             const error = new Error(`Expected status ${expectedStatus} but got ${actualStatus}\n\n Recent API Activity: \n${logs}`)
-            Error.captureStackTrace(error, callingMethod)
+            Error.captureStackTrace(error, callingMethod)           //allows to pinpoint the caller of this method to be the printed error for more readability
             throw error
         }
 
