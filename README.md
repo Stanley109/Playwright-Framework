@@ -9,6 +9,7 @@ A playwright framework with CICD using github actions.
 5. `npm install -D @types/node` or `npm install --save-dev @types/node` so that it can identify what 'process' contains
 6. `npm install cross-env` so that user can use cross-env; which can invoke environment parameters on the go. example: `npx cross-env TEST_ENV=sit playwright test --project=chromium`
 7. `tsconfig.json` so that you won't have 'unrecognized libraries' problems
+8. Run `npx playwright test --ui` then click the "Pick Locator" button (the crosshair icon) at the top of the UI if you are having a hard time locating elements. This is a very helpful feature from playwright for locating elements.
 
 
 ## Framework walkthrough
@@ -22,13 +23,13 @@ A playwright framework with CICD using github actions.
 
 
 ### Handling the actual tests
-7.  Page object model is under the page-objects folder. `Spanish-Cards-Class-Styles.ts` is the main page object file while `App.ts` acts as the facade that handles all page object instantiaion.
+1.  Page object model is under the page-objects folder. `Spanish-Cards-Class-Styles.ts` is the main page object file while `App.ts` acts as the facade that handles all page object instantiaion.
 This is so that spec files only needs to intantiate App.ts 
-8.  2 spec files (`smoke.spec.ts` and `standalone-smoke.spec.ts`)were created for comparison of test flow behavior. `smoke.spec.ts` uses before/after all while `standalone-smoke.spec.ts`(better practice) uses before/after each.
-9. `smoke.spec.ts` tests are tagged as '@smoke and @regression' while `standalone-smoke.spec.ts` are tagged as '@standalone and @regression'. To run all, run the command:
+2.  2 spec files (`smoke.spec.ts` and `standalone-smoke.spec.ts`)were created for comparison of test flow behavior. `smoke.spec.ts` uses before/after all while `standalone-smoke.spec.ts`(better practice) uses before/after each.
+3. `smoke.spec.ts` tests are tagged as '@smoke and @regression' while `standalone-smoke.spec.ts` are tagged as '@standalone and @regression'. To run all, run the command:
 `npx cross-env TEST_ENV=sit playwright test --project=chromium --headed --grep '@regression'`
-10. check `Parse some json data and random generation data` test under `smoke.spec.ts`
-11. For API testing, we follow a 'fluent interface design pattern' which `request-handler.ts` follows. This allows users to method chaining.
+4. check `Parse some json data and random generation data` test under `smoke.spec.ts`
+5. For API testing, we follow a 'fluent interface design pattern' which `request-handler.ts` follows. This allows users to method chaining.
     Example: 
     const response = await api
         .url('https://random.com/api')
@@ -39,19 +40,19 @@ This is so that spec files only needs to intantiate App.ts
     11.b basically if there will be another base url domain, just append it in the `api-fixtures.ts` then call it on your test('test', async({api})
 
 ### Handling Reporting
-12.  Install Monocart using `npm install --save-dev monocart-reporter`
-13.  Add these in the `playwright.config.ts` `['monocart-reporter', { name: 'Playwright Test Report', outputFile: 'monocart-report/index.html'}],`
+1.  Install Monocart using `npm install --save-dev monocart-reporter`
+2.  Add these in the `playwright.config.ts` `['monocart-reporter', { name: 'Playwright Test Report', outputFile: 'monocart-report/index.html'}],`
 
 ### Handling CICD
-13. Before handling any env, make sure that there is a single point of integration where all env variables are stored in 1 file. In this case, its env.ts.  All file will reference its env values there and nothing else if possible. So that it can be easily handled.
-14. Realistically, env files are not pushed to the repository since it contains sensitive data. In this case, we would disable the logic of reading an env file when running this in CI. Under env > `global-setup.ts` , added if (!process.env.CI) to disable it in CI.
-15. Now, after that we have to replace all declared `process.env.<variable>` in the CI since we will not use .env in the CI. 
-16. To do that, supply the necessary variables under the github repo website > settings > Environments. From there create 2 environment (sit and uat) to mimic the setup of .env files locally. Then in the yml, we can then do something like this 
+1. Before handling any env, make sure that there is a single point of integration where all env variables are stored in 1 file. In this case, its env.ts.  All file will reference its env values there and nothing else if possible. So that it can be easily handled.
+2. Realistically, env files are not pushed to the repository since it contains sensitive data. In this case, we would disable the logic of reading an env file when running this in CI. Under env > `global-setup.ts` , added if (!process.env.CI) to disable it in CI.
+3. Now, after that we have to replace all declared `process.env.<variable>` in the CI since we will not use .env in the CI. 
+4. To do that, supply the necessary variables under the github repo website > settings > Environments. From there create 2 environment (sit and uat) to mimic the setup of .env files locally. Then in the yml, we can then do something like this 
         env:
             CI: true
             ENV_NAME: ${{secrets.ENV_NAME}}
             BASE_URL: ${{secrets.BASE_URL}}
             ENV_TEST_MSG: ${{vars.ENV_TEST_MSG}}
-17. use secrets.<varname> when invoking data stored under secrets while vars.<varname> when invoking environment variable accordingly.
-18. After the run, artifacts will be stored as well so that user can view the test results.
+5. use secrets.<varname> when invoking data stored under secrets while vars.<varname> when invoking environment variable accordingly.
+6. After the run, artifacts will be stored as well so that user can view the test results.
 
