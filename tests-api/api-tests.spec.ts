@@ -1,19 +1,15 @@
 // import {test} from '@playwright/test';   //since we are already using fixtures, this is not needed anymore
 import {test} from '../utils/api-fixtures';
 import {expect} from '@playwright/test';
+import {createToken} from '../utils/api-token-helper'
 
 //Note: The UI website is https://conduit.bondaracademy.com/. If you want to check its corresponding api calls, open the network tab then refresh the webpage.
 //Some of those api calls are the same api being tested here.
 
 let authToken: string
 
-test.beforeAll('Get Token', async({api}) => {        //'api' fixture came from the import {test} from api-fixtures.ts
-    const tokenResponse = await api
-        .path('/users/login')
-        .body({"user":{"email":"pwapiuser@test.com", "password":"Welcome"}})
-        .postRequest(200)
-
-    authToken = 'Token ' + tokenResponse.user.token
+test.beforeAll('Get Token', async({request}) => {        //'api' fixture came from the import {test} from api-fixtures.ts
+    authToken = await createToken(request,"pwapiuser@test.com", "Welcome")
     console.log(authToken)
 })
 
@@ -115,10 +111,11 @@ test('Create, Update, then Delete Article',{tag: ['@api', '@smoke', '@regression
     console.log(`slug after update is: ${getArticleResponse2.articles[0].title}`)
 
     //delete the article
-    await api
+    const getDeleteResponse = await api
         .path(`/articles/${slugIdNew}`)
         .headers({Authorization: authToken})
         .deleteRequest(204)
+    console.log(`delete response is: ${getDeleteResponse}`)
     
     //view if the article is really deleted
     const getArticleResponse3 = await api

@@ -1,5 +1,5 @@
 import { test as base } from '@playwright/test';
-import { RequestHandler } from './request-handler';
+import { RequestHandler } from './api-request-handler';
 import { APILogger } from './api-logger';
 
 // Declare the custom fixtures that will be added to Playwright's built-in fixtures.

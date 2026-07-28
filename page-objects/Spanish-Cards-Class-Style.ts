@@ -1,4 +1,4 @@
-import {expect, Locator, Page} from "@playwright/test";
+import {test, expect, Locator, Page} from "@playwright/test";
 
 export class SpanishCardsClassStyle {
 
@@ -54,21 +54,23 @@ export class SpanishCardsClassStyle {
         console.log(`initial num is: ${initialCardNum}`);
         
         let currentCardNum = initialCardNum;
-
+        
         // click the next button 3 times and check if the card counter is correct each time
         for(let i = 1; i <= 3; i++){
             await this.page.waitForTimeout(500);
             await this.nextButton.click()
             currentCardNum++;
-            if(currentCardNum > 15){
-                currentCardNum = 1;         
-                console.log(`current num after clicking next is: ${currentCardNum} / 15`);
-                expect(this.cardCounter).toHaveText(`${currentCardNum} / 15`);
-            }
-            else {
-                console.log(`current num after clicking next is: ${currentCardNum} / 15`);
-                expect(this.cardCounter).toHaveText(`${currentCardNum} / 15`);           
-            }
+            await test.step(`Verify counter shows card '${currentCardNum} / 15'`, async () => {
+                if(currentCardNum > 15){
+                    currentCardNum = 1;         
+                    console.log(`current num after clicking next is: ${currentCardNum} / 15`);
+                    expect(this.cardCounter).toHaveText(`${currentCardNum} / 15`);
+                }
+                else {
+                    console.log(`current num after clicking next is: ${currentCardNum} / 15`);
+                    expect(this.cardCounter).toHaveText(`${currentCardNum} / 15`);           
+                }
+            })
         }
 
         //click the random button again

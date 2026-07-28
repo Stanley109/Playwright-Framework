@@ -4,14 +4,14 @@ import env from './env/env';
 export default defineConfig({
   
   globalSetup: './env/global-setup.ts',
-  testDir: './tests',
-  fullyParallel: true,
+  //testDir: './tests',         // commenting this out since we now have 2 test folders. 1 for ui and 1 for api  and if we use 'npx playwright test' without --projectName, it will run both
+  fullyParallel: true,        //run test in the same file in parallel
   timeout: 20_000,             //timeout for each test. default is 30 secs
   expect: {timeout: 3_000},  //expect timeout for each assertion. default is 5 secs
   globalTimeout: 3_600_000,    //timeout for the whole test run. no default values here.
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 3 : 2,      //retries failed test x times. currently  CI = 3 and non-CI = 2
-  workers: process.env.CI ? 2 : 2,
+  workers: process.env.CI ? 1 : 2,
   reporter: [
     ['line'], // Terminal progress logger
     ['monocart-reporter', { name: 'Playwright Test Report', outputFile: 'monocart-report/index.html'}],   //Monocart report
@@ -36,9 +36,19 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
+      name: 'ui-tests',
       use: { ...devices['Desktop Chrome'] },
+      testDir: './tests-ui',
     },
+    {
+      name: 'api-tests',
+      testDir: './tests-api',
+      testMatch: 'api*',
+      fullyParallel: false,
+      use: {
+        baseURL: 'testonly.com'      // use ${testInfo.project.use.baseURL} if you want to parse baseURL. with baseurl, you will only append endpoints and not the base url. eg. await this.request.get('/apisomething')
+      }
+    }
 
     // {
     //   name: 'firefox',

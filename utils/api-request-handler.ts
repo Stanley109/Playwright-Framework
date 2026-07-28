@@ -112,10 +112,12 @@ export class RequestHandler {
         this.cleanupFields()
 
         const actualStatus =  response.status()         
-        const responseJSON = await response.text()                // we need to change from response.json to response.text because delete can have no body
+        const responseText = await response.text()                // we need to change from response.json to response.text because delete can have no body
         
-        this.logger.logResponse(actualStatus, responseJSON)                     
-        this.statusCodeValidator(actualStatus, statusCode, this.deleteRequest)     
+        this.logger.logResponse(actualStatus, responseText)                     
+        this.statusCodeValidator(actualStatus, statusCode, this.deleteRequest)   
+        
+        return responseText;
     }
 
     private getUrl(){                                   //constructs the url path. appends necessary params
