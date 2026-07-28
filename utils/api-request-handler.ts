@@ -1,4 +1,4 @@
-import { APIRequestContext, expect } from '@playwright/test';
+import { test, APIRequestContext, expect } from '@playwright/test';
 import { APILogger } from './api-logger';
 import { log } from 'node:console';
 
@@ -47,76 +47,88 @@ export class RequestHandler {
     }
 
     async getRequest(statusCode: number){
+        let responseJSON: any
         const url = this.getUrl()
-        this.logger.logRequest('GET', url, this.apiHeaders)       //log the request
-        const response = await this.request.get(url,{             //do the actual GET request
-            headers: this.apiHeaders
+
+        await test.step(`GET request to ${url}`,async()=>{
+            this.logger.logRequest('GET', url, this.apiHeaders)       //log the request
+            const response = await this.request.get(url,{             //do the actual GET request
+                headers: this.apiHeaders
+            })
+            this.cleanupFields()                            // reset the parameters after each request call because usually in 1 end to end api test, lots of endpoints are called and is only using the same request-handler instance.
+            
+            const actualStatus =  response.status()         //the reason why response.status doesn't need await is because request.get already wait for the response.header (eg. the code status)
+            responseJSON = await response.json()      //however, for the body, since request.get doesn't wait for the body response, hence we need to do the await here.
+            
+            this.logger.logResponse(actualStatus, responseJSON)                   //log the response
+            this.statusCodeValidator(actualStatus, statusCode, this.getRequest)   //replaces the expect(actualStatus).toEqual(statusCode)
+            
+            //this.logger.removeLogs()                        //if you want to clear this whole method's log record for the current test instance, use this
+            //expect (actualStatus).toEqual(statusCode)       //not needed anymore as statusCodeValidator is implemented
         })
-        this.cleanupFields()                            // reset the parameters after each request call because usually in 1 end to end api test, lots of endpoints are called and is only using the same request-handler instance.
-        
-        const actualStatus =  response.status()         //the reason why response.status doesn't need await is because request.get already wait for the response.header (eg. the code status)
-        const responseJSON = await response.json()      //however, for the body, since request.get doesn't wait for the body response, hence we need to do the await here.
-        
-        this.logger.logResponse(actualStatus, responseJSON)                   //log the response
-        this.statusCodeValidator(actualStatus, statusCode, this.getRequest)   //replaces the expect(actualStatus).toEqual(statusCode)
-        
-        //this.logger.removeLogs()                        //if you want to clear this whole method's log record for the current test instance, use this
-        //expect (actualStatus).toEqual(statusCode)       //not needed anymore as statusCodeValidator is implemented
-        
         return responseJSON
     }
 
     async postRequest(statusCode: number){
+        let responseJSON: any
         const url = this.getUrl()
-        this.logger.logRequest('POST', url, this.apiHeaders, this.apiBody)
-        const response = await this.request.post(url,{
-            headers: this.apiHeaders,
-            data: this.apiBody
-        })
-        this.cleanupFields()       
-        
-        const actualStatus =  response.status()
-        const responseJSON = await response.json()      
-        
-        this.logger.logResponse(actualStatus, responseJSON)                    
-        this.statusCodeValidator(actualStatus, statusCode, this.postRequest)  
 
+        await test.step(`POST request to ${url}`,async()=>{
+            this.logger.logRequest('POST', url, this.apiHeaders, this.apiBody)
+            const response = await this.request.post(url,{
+                headers: this.apiHeaders,
+                data: this.apiBody
+            })
+            this.cleanupFields()       
+            
+            const actualStatus =  response.status()
+            responseJSON = await response.json()      
+            
+            this.logger.logResponse(actualStatus, responseJSON)                    
+            this.statusCodeValidator(actualStatus, statusCode, this.postRequest)  
+        })
         return responseJSON
     }
 
     async putRequest(statusCode: number){
+        let responseJSON: any
         const url = this.getUrl()
-        this.logger.logRequest('PUT', url, this.apiHeaders, this.apiBody)
-        const response = await this.request.put(url,{
-            headers: this.apiHeaders,
-            data: this.apiBody
+
+        await test.step(`PUT request to ${url}`,async()=>{
+            this.logger.logRequest('PUT', url, this.apiHeaders, this.apiBody)
+            const response = await this.request.put(url,{
+                headers: this.apiHeaders,
+                data: this.apiBody
+            })
+            this.cleanupFields()
+
+            const actualStatus =  response.status()         
+            responseJSON = await response.json()      
+            
+            this.logger.logResponse(actualStatus, responseJSON)                     
+            this.statusCodeValidator(actualStatus, statusCode, this.putRequest) 
         })
-        this.cleanupFields()
-
-        const actualStatus =  response.status()         
-        const responseJSON = await response.json()      
-        
-        this.logger.logResponse(actualStatus, responseJSON)                     
-        this.statusCodeValidator(actualStatus, statusCode, this.putRequest)     
-
         return responseJSON
     }
 
     async deleteRequest(statusCode: number){
+        let responseText: any
         const url = this.getUrl()
-        this.logger.logRequest('DELETE', url, this.apiHeaders)
-        const response = await this.request.delete(url,{
-            headers: this.apiHeaders,
-            data: this.apiBody
-        })
-        this.cleanupFields()
 
-        const actualStatus =  response.status()         
-        const responseText = await response.text()                // we need to change from response.json to response.text because delete can have no body
-        
-        this.logger.logResponse(actualStatus, responseText)                     
-        this.statusCodeValidator(actualStatus, statusCode, this.deleteRequest)   
-        
+        await test.step(`DELETE request to ${url}`,async()=>{
+            this.logger.logRequest('DELETE', url, this.apiHeaders)
+            const response = await this.request.delete(url,{
+                headers: this.apiHeaders,
+                data: this.apiBody
+            })
+            this.cleanupFields()
+
+            const actualStatus =  response.status()         
+            responseText = await response.text()                // we need to change from response.json to response.text because delete can have no body
+            
+            this.logger.logResponse(actualStatus, responseText)                     
+            this.statusCodeValidator(actualStatus, statusCode, this.deleteRequest)   
+        })
         return responseText;
     }
 
@@ -147,8 +159,8 @@ export class RequestHandler {
             throw error
         }
 
-       // if you want to log every time (even if passed), just console.log it
-       // console.log(`Success! Expected status ${expectedStatus} and got ${actualStatus}\n\n Recent API Activity: \n${logs}`)
+       //if you want to log every time (even if passed), just console.log it
+       //console.log(`Success! Expected status ${expectedStatus} and got ${actualStatus}\n\n Recent API Activity: \n${logs}`)
         
     }
 }
