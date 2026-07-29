@@ -10,6 +10,7 @@ A playwright framework with CICD using github actions.
 6. `npm install cross-env` so that user can use cross-env; which can invoke environment parameters on the go. example: `npx cross-env TEST_ENV=sit playwright test --project=chromium`
 7. `tsconfig.json` so that you won't have 'unrecognized libraries' problems
 8. Run `npx playwright test --ui` then click the "Pick Locator" button (the crosshair icon) at the top of the UI if you are having a hard time locating elements. This is a very helpful feature from playwright for locating elements.
+9. `npm install ajv --save-dev` to install api json schema validator and add it under dev dependencies in `package.json`
 
 
 ## Framework walkthrough
@@ -36,8 +37,9 @@ This is so that spec files only needs to intantiate App.ts
         .path('/articles')
         .params({limit:10, offset:0, foo:'bar'})
         .getRequest(200)
-    11.a if the point of integration of ui tests is the `app.ts`, then the point of integration of api tests is a fixture which is `api-fixtures.ts`.
+    11.a if the point of integration (instantiations) of ui tests is the `app.ts`, then the point of integration for api tests is a fixture which is `api-fixtures.ts`.
     11.b basically if there will be another base url domain, just append it in the `api-fixtures.ts` then call it on your test('test', async({api})
+6. By default, playwright does not support schema validation. Therefore, we have create it on our own.
 
 ### Handling Reporting
 1.  Install Monocart using `npm install --save-dev monocart-reporter`

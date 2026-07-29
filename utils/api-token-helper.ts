@@ -17,8 +17,8 @@ export async function createToken(request:APIRequestContext, email: string, pass
 
         return 'Token ' + tokenResponse.user.token
     }
-    catch(error){
-        Error.captureStackTrace(error as object, createToken);
+    catch(error:any){
+        Error.captureStackTrace(error, createToken);
         throw error;
     } 
 }

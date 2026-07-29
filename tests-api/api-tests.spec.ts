@@ -2,6 +2,7 @@
 import {test} from '../utils/api-fixtures';
 import {expect} from '@playwright/test';
 import {createToken} from '../utils/api-token-helper'
+import { validateSchema } from '../utils/api-schema-validator';
 
 //Note: The UI website is https://conduit.bondaracademy.com/. If you want to check its corresponding api calls, open the network tab then refresh the webpage.
 //Some of those api calls are the same api being tested here.
@@ -31,6 +32,7 @@ test('Get Test Tags',{tag: ['@api', '@smoke', '@regression']}, async({api})=>{
     const response = await api
         .path('/tags')
         .getRequest(200)
+    await validateSchema('tags','GET_tags', response)
     expect(response.tags[0]).toEqual('Test')
     expect(response.tags.length).toBeLessThanOrEqual(10)
             

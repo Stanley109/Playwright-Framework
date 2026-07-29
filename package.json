@@ -7,20 +7,17 @@
   "devDependencies": {
     "@playwright/test": "^1.61.1",
     "@types/node": "^26.1.1",
+    "ajv": "^8.20.0",
     "monocart-reporter": "^2.12.2"
   },
   "scripts": {
     "sit-headless": "npx cross-env TEST_ENV=sit HEADLESS=true playwright test",
     "sit-headed": "npx cross-env TEST_ENV=sit HEADLESS=false playwright test",
-
     "sit-headless-smoke": "npx cross-env TEST_ENV=sit HEADLESS=true playwright test --grep '@smoke'",
     "sit-headed-smoke": "npx cross-env TEST_ENV=sit HEADLESS=false playwright test --grep '@smoke'",
-
     "uat-headless": "npx cross-env TEST_ENV=uat HEADLESS=true playwright test",
     "uat-headed": "npx cross-env TEST_ENV=uat HEADLESS=false playwright test",
-    
     "uat-headless-smoke": "npx cross-env TEST_ENV=uat HEADLESS=true playwright test --grep '@smoke'",
     "uat-headed-smoke": "npx cross-env TEST_ENV=uat HEADLESS=false playwright test --grep '@smoke'"
-    
   }
 }
