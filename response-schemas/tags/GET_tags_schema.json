@@ -3,7 +3,7 @@
   "title": "Generated schema for Root",
   "type": "object",
   "properties": {
-    "tag": {
+    "tags": {
       "type": "array",
       "items": {
         "type": "string"
@@ -11,6 +11,6 @@
     }
   },
   "required": [
-    "tag"
+    "tags"
   ]
 }
