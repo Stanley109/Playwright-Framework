@@ -45,6 +45,7 @@ export default defineConfig({
       testDir: './tests-api',
       testMatch: 'api*',
       fullyParallel: false,
+      retries: 0,
       use: {
         baseURL: 'testonly.com'      // use ${testInfo.project.use.baseURL} if you want to parse baseURL. with baseurl, you will only append endpoints and not the base url. eg. await this.request.get('/apisomething')
       }
