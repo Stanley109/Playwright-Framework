@@ -26,15 +26,17 @@ test('Get Articles', {tag: ['@api', '@smoke', '@regression']}, async({api}) => {
 
     expect(response.articles.length).toBeLessThanOrEqual(10)
     expect(response.articlesCount).toEqual(10)  
+    await validateSchema('articles','GET_articles', response, true)
 })
 
 test('Get Test Tags',{tag: ['@api', '@smoke', '@regression']}, async({api})=>{
     const response = await api
         .path('/tags')
         .getRequest(200)
-    await validateSchema('tags','GET_tags', response)
+    
     expect(response.tags[0]).toEqual('Test')
     expect(response.tags.length).toBeLessThanOrEqual(10)
+    await validateSchema('tags','GET_tags', response, true)
             
 })
 
@@ -45,8 +47,10 @@ test('Create and Delete Article',{tag: ['@api', '@smoke', '@regression']}, async
         .headers({ Authorization: authToken })
         .body({"article": {"title":"TEST DATA 1","description":"Test Description 1", "body":"Test body","tagList":[]}})
         .postRequest(201)
+
     expect(createArticleResponse.article.title).toEqual('TEST DATA 1')
     const slugId = createArticleResponse.article.slug
+    await validateSchema('articles','POST_articles', createArticleResponse, true)
 
     //view if article is created
     const getArticleResponse = await api
@@ -54,7 +58,9 @@ test('Create and Delete Article',{tag: ['@api', '@smoke', '@regression']}, async
         .headers({ Authorization: authToken })
         .params({ limit: 10, offset: 0})
         .getRequest(200)
+
     expect(getArticleResponse.articles[0].title).toEqual('TEST DATA 1')
+    await validateSchema('articles','GET_articles', getArticleResponse, true)
 
     //delete the article
     await api
@@ -68,6 +74,9 @@ test('Create and Delete Article',{tag: ['@api', '@smoke', '@regression']}, async
         .headers({ Authorization: authToken })
         .params({ limit: 10, offset: 0})
         .getRequest(200)
+
+    expect(getArticleResponse2.articles[0].title).not.toEqual('TEST DATA 1')
+    await validateSchema('articles','GET_articles', getArticleResponse2)
     
     console.log(`slug before is: ${getArticleResponse.articles[0].title}`)
     console.log(`slug now is: ${getArticleResponse2.articles[0].title}`)
@@ -82,8 +91,11 @@ test('Create, Update, then Delete Article',{tag: ['@api', '@smoke', '@regression
         .headers({ Authorization: authToken })
         .body({"article": {"title":"TEST DATA 1","description":"Test Description 1", "body":"Test body","tagList":[]}})
         .postRequest(201)
+    
     expect(createArticleResponse.article.title).toEqual('TEST DATA 1')
     const slugId = createArticleResponse.article.slug
+    await validateSchema('articles','POST_articles', createArticleResponse, true)
+
 
     //view if article is created
     const getArticleResponse = await api
@@ -91,8 +103,11 @@ test('Create, Update, then Delete Article',{tag: ['@api', '@smoke', '@regression
         .headers({ Authorization: authToken })
         .params({ limit: 10, offset: 0})
         .getRequest(200)
+
     expect(getArticleResponse.articles[0].title).toEqual('TEST DATA 1')
+    await validateSchema('articles','GET_articles', getArticleResponse, true)
     console.log(`slug after create is: ${getArticleResponse.articles[0].title}`)
+    
 
     //update the article
     const updateArticleResponse = await api
@@ -100,8 +115,11 @@ test('Create, Update, then Delete Article',{tag: ['@api', '@smoke', '@regression
         .headers({ Authorization: authToken })
         .body({"article": {"title":"TEST DATA 2","description":"Test Description 2", "body":"Test body 2","tagList":[]}})
         .putRequest(200)
+
     expect(updateArticleResponse.article.title).toEqual('TEST DATA 2')
     const slugIdNew = updateArticleResponse.article.slug
+    await validateSchema('articles','PUT_articles', updateArticleResponse, true)
+    
 
     //view if article is updated
     const getArticleResponse2 = await api
@@ -109,8 +127,11 @@ test('Create, Update, then Delete Article',{tag: ['@api', '@smoke', '@regression
         .headers({ Authorization: authToken })
         .params({ limit: 10, offset: 0})
         .getRequest(200)
+
     expect(getArticleResponse2.articles[0].title).toEqual('TEST DATA 2')
+    await validateSchema('articles','GET_articles', getArticleResponse2)
     console.log(`slug after update is: ${getArticleResponse2.articles[0].title}`)
+
 
     //delete the article
     const getDeleteResponse = await api
@@ -119,13 +140,16 @@ test('Create, Update, then Delete Article',{tag: ['@api', '@smoke', '@regression
         .deleteRequest(204)
     console.log(`delete response is: ${getDeleteResponse}`)
     
+
     //view if the article is really deleted
     const getArticleResponse3 = await api
         .path('/articles')
         .headers({ Authorization: authToken })
         .params({ limit: 10, offset: 0})
         .getRequest(200)
+
     expect(getArticleResponse3.articles[0].title).not.toEqual('TEST DATA 1')
+    await validateSchema('articles','GET_articles', getArticleResponse3)
     console.log(`slug after delete is: ${getArticleResponse3.articles[0].title}`)
 })
 
