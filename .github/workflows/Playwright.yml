@@ -80,7 +80,7 @@ jobs:
               with:
                 name: monocart-report-${{ github.run_number }}
                 path: monocart-report/
-                retention-days: 2
+                retention-days: 7
                 if-no-files-found: warn
             
             - name: Upload Playwright HTML report
@@ -89,6 +89,6 @@ jobs:
               with:
                 name: playwright-report-${{ github.run_number }}
                 path: playwright-report/
-                retention-days: 2
+                retention-days: 7
                 if-no-files-found: warn
 
