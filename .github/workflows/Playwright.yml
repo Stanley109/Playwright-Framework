@@ -27,7 +27,7 @@ on:
                     - regression
     
 concurrency:
-    group: ${{github.workflow}}-${{github.ref}}
+    group: ${{github.workflow}}-${{github.ref}}         # github.workflow is 'Playwright CI' and github.ref is the branch name. Therefore, this concurrency group will be unique for each branch. This means that if a workflow is running for a branch, and another workflow is triggered for the same branch, the first workflow will be cancelled.
     cancel-in-progress: true
 
 jobs:
