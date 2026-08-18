@@ -18,7 +18,7 @@ concurrency:
 jobs:
     build:
         if: github.event_name == 'workflow_dispatch' || contains(fromJSON('["schedule", "workflow_dispatch"]'), github.event.workflow_run.event)
-        runs-on: standard
+        runs-on: ubuntu-latest
         steps:
             - name: Checkout playwright-analytics-data
               uses: actions/checkout@v4
@@ -34,7 +34,7 @@ jobs:
         environment:
             name: github-pages
             url: ${{ steps.deployment.outputs.page_url }}
-        runs-on: standard
+        runs-on: ubuntu-latest
         needs: build
         steps:
             - name: Deploy to GitHub Pages
