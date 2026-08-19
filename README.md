@@ -58,3 +58,8 @@ This is so that spec files only needs to intantiate App.ts
 5. use secrets.<varname> when invoking data stored under secrets while vars.<varname> when invoking environment variable accordingly.
 6. After the run, artifacts will be stored as well so that user can view the test results.
 
+### Handling Github Pages
+1. `deploy-pages.yml` handles the github pages logic.
+2. A separate branch named `Playwright-analytics` is where we dump all the html and data and use the github page to help visualize the data
+
+

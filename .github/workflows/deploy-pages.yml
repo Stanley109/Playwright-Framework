@@ -40,10 +40,10 @@ jobs:
         uses: actions/download-artifact@v4                                      # download an artifact
         with:
           name: playwright-json-${{ github.event.workflow_run.run_number }}     # download the artifact that was uploaded by Playwright CI workflow. This is the exact name of the artifact after running in github actions
-          path: ./data                                                          # dump the artifact into a folder called data in the root of the repository and branch specified above (playwright-analytics).
+          path: ./data                                                          # uploads the artifact to the github runner's ./data folder. We cannot see the artifact in our local repo because it is only available in the github runner's file system.                                         
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}                                  #specify the repository to pinpoint the name of the artifact to download. 
-          run-id: ${{ github.event.workflow_run.id }}                           #specify the run-id (run number) to pinpoint the name of the artifact to download. This is the run number of the Playwright CI workflow that triggered this deploy-pages workflow.
+          run-id: ${{ github.event.workflow_run.id }}                           #specify the run-id to pinpoint the name of the artifact to download. This is the run number of the Playwright CI workflow that triggered this deploy-pages workflow.
 
       - name: Setup Pages       
         uses: actions/configure-pages@v5                #"I'm preparing something that will be deployed using GitHub Pages."
