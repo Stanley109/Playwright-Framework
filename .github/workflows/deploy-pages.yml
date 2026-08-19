@@ -8,9 +8,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
-  actions: read
-  pages: write
+  contents: read                    #allows us to read the contents of the repository, which is necessary for deploying to GitHub Pages.   
+  actions: read                     #allows us to read the artifacts that were uploaded by the Playwright CI workflow.
+  pages: write                      #allows us to deploy to GitHub Pages
   id-token: write
 
 concurrency:
@@ -35,6 +35,15 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: playwright-analytics
+
+      - name: Download Playwright JSON
+        uses: actions/download-artifact@v4                                      # download an artifact
+        with:
+          name: playwright-json-${{ github.event.workflow_run.run_number }}     # download the artifact that was uploaded by Playwright CI workflow. This is the exact name of the artifact after running in github actions
+          path: ./data                                                          # dump the artifact into a folder called data in the root of the repository and branch specified above (playwright-analytics).
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}                                  #specify the repository to pinpoint the name of the artifact to download. 
+          run-id: ${{ github.event.workflow_run.id }}                           #specify the run-id (run number) to pinpoint the name of the artifact to download. This is the run number of the Playwright CI workflow that triggered this deploy-pages workflow.
 
       - name: Setup Pages       
         uses: actions/configure-pages@v5                #"I'm preparing something that will be deployed using GitHub Pages."
