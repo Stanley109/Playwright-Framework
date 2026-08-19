@@ -37,9 +37,9 @@ This is so that spec files only needs to intantiate App.ts
         .path('/articles')
         .params({limit:10, offset:0, foo:'bar'})
         .getRequest(200)
-    11.a if the point of integration (instantiations) of ui tests is the `app.ts`, then the point of integration for api tests is a fixture which is `api-fixtures.ts`.
-    11.b basically if there will be another base url domain, just append it in the `api-fixtures.ts` then call it on your test('test', async({api})
-6. By default, playwright does not support schema validation. Therefore, we have create it on our own.
+6. if the point of integration (instantiations) of ui tests is the `app.ts`, then the point of integration for api tests is a fixture which is `api-fixtures.ts`.
+7. basically if there will be another base url domain, just append it in the `api-fixtures.ts` then call it on your test('test', async({api})
+8. By default, playwright does not support schema validation. Therefore, we have create it on our own.
 
 ### Handling Reporting
 1.  Install Monocart using `npm install --save-dev monocart-reporter`
@@ -57,4 +57,7 @@ This is so that spec files only needs to intantiate App.ts
             ENV_TEST_MSG: ${{vars.ENV_TEST_MSG}}
 5. use secrets.<varname> when invoking data stored under secrets while vars.<varname> when invoking environment variable accordingly.
 6. After the run, artifacts will be stored as well so that user can view the test results.
+
+### Github Pages
+1. Github pages allows users to see a historical data of test runs over multiple days and display it according to one's preference
 

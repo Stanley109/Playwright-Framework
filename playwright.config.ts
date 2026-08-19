@@ -15,7 +15,8 @@ export default defineConfig({
   reporter: [
     ['line'], // Terminal progress logger
     ['monocart-reporter', { name: 'Playwright Test Report', outputFile: 'monocart-report/index.html'}],   //Monocart report. also sets the name of the report
-    ['html', { outputFolder: 'playwright-report', open: 'never' }]    // Playwright's built-in HTML report
+    ['html', { outputFolder: 'playwright-report', open: 'never' }],    // Playwright's built-in HTML report
+    ['json', { outputFile: 'playwright-report/results.json'}]                 // Playwright's built-in JSON report for github pages analytics.
   ],
   
   use: {
