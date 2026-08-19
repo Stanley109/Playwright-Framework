@@ -92,3 +92,12 @@ jobs:
                 retention-days: 7
                 if-no-files-found: warn
 
+            - name: Upload Playwright JSON for analytics
+              uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                name: playwright-json-${{ github.run_number }}
+                path: playwright-report/playwright-report.json
+                retention-days: 7
+                if-no-files-found: error
+
