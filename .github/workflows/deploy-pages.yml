@@ -19,8 +19,9 @@ concurrency:
 
 jobs:
   build:                
-    #yaml folded block scalar syntax (>) is used to write multi-line strings in a more readable way.    
-    #  github.event_name == 'workflow_dispatch' means if this deploy-pages was triggered mannually OR schedule or workflow_dispatch simply mean if it came passed down from playwright-ci workflow run.
+    # yaml folded block scalar syntax (>) is used to write multi-line strings in a more readable way.    
+    # github.event_name == 'workflow_dispatch' means if this deploy-pages was triggered manually OR schedule or workflow_dispatch simply mean if it came passed down from playwright-ci workflow run.
+    # github.even_name doesn't make sense right now and will result to error when this workflow is triggered manually because most logic here rely's on playwright-ci workflow run event.
     if: >                                                           
       github.event_name == 'workflow_dispatch' ||                   
       (
