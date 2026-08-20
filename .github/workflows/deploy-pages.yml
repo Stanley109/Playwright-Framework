@@ -8,10 +8,10 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read                    #allows us to read the contents of the repository, which is necessary for deploying to GitHub Pages.   
-  actions: read                     #allows us to read the artifacts that were uploaded by the Playwright CI workflow.
-  pages: write                      #allows us to deploy to GitHub Pages
-  id-token: write
+  contents: write                   #allows the workflow to commit and push historical Playwright results to the repository.   
+  actions: read                     #allows the workflow to download artifacts from the Playwright CI workflow.
+  pages: write                      #allows the workflow to deploy the GitHub Pages site.
+  id-token: write                   #allows the workflow to authenticate the GitHub Pages deployment.
 
 concurrency:
   group: pages
@@ -43,10 +43,18 @@ jobs:
           path: ./data                                                          # uploads the artifact to the github runner's ./data folder. We cannot see the artifact in our local repo because it is only available in the github runner's file system.                                         
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}                                  #specify the repository to pinpoint the name of the artifact to download. 
-          run-id: ${{ github.event.workflow_run.id }}                           #specify the run-id to pinpoint the name of the artifact to download. This is the run number of the Playwright CI workflow that triggered this deploy-pages workflow.
+          run-id: ${{ github.event.workflow_run.id }}                           #specify the run-id to pinpoint the artifact from the specific Playwright CI run that triggered this deploy-pages workflow.
       
       - name: Parse Playwright results
-        run: node scripts/parse-playwright-results.js                         
+        run: node scripts/parse-playwright-results.js    
+        
+      - name: Save historical result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add playwright_results/
+          git commit -m "Add Playwright run ${{ github.event.workflow_run.run_number }}" || echo "No changes to commit"
+          git push origin playwright-analytics
 
       - name: Setup Pages       
         uses: actions/configure-pages@v5                #"I'm preparing something that will be deployed using GitHub Pages."
