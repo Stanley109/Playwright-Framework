@@ -47,7 +47,7 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}                           #specify the run-id to pinpoint the artifact from the specific Playwright CI run that triggered this deploy-pages workflow.
       
       - name: Parse Playwright results
-        run: node scripts/parse-playwright-results.js    
+        run: node scripts/generate-playwright-analytics.js    
         
       - name: Save historical result
         run: |
