@@ -16,8 +16,8 @@ const path = require('path');
 // IMPORTANT NOTE: YOU CANNOT SEE `reporthPath` IN YOUR LOCAL ENVIRONMENT. THIS IS ONLY VISIBLE IN THE GITHUB ACTIONS ENVIRONMENT. (refer to the master branch's deploy-pages.yml file for more information)
 // ============================================================
 
-//const reportPath = './data/playwright-report.json';
- const reportPath = 'playwright-report.json';         //enable this if you want to run this script locally, but you will need to generate the playwright-report.json file first by running the tests and saving the report.
+const reportPath = './data/playwright-report.json';
+// const reportPath = 'playwright-report.json';         //enable this if you want to run this script locally, but you will need to generate the playwright-report.json file first by running the tests and saving the report.
 
 const report = JSON.parse(
     fs.readFileSync(reportPath, 'utf8')
