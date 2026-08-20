@@ -9,9 +9,10 @@ const report = JSON.parse(
 const total = report.stats.expected
     + report.stats.unexpected
     + report.stats.skipped;
+    + report.stats.flaky;
 
 const flaky = report.stats.flaky;
-const passed = report.stats.expected - flaky;
+const passed = report.stats.expected;
 const failed = report.stats.unexpected;
 const skipped = report.stats.skipped;
 
