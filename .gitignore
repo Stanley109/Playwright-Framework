@@ -12,3 +12,5 @@ coverage/
 /playwright/.cache/
 /playwright/.auth/
 /monocart-report/
+/playwright_results/
+playwright-report.json

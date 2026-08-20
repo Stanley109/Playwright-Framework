@@ -43,14 +43,41 @@
         }
 
         .card-value {
+            color: #3e05f7;
             font-size: 28px;
             font-weight: bold;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 15px;
+            height: 600px;
+        }
+
+        #passRateChart {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-header select {
+            padding: 6px 10px;
         }
     </style>
 </head>
 
 <body>
-
+    <!-- Create the cards for displaying analytics data  on the first section -->
     <h1>Playwright Analytics</h1>
     <p class="subtitle">Day 2 — Overview</p>
 
@@ -60,35 +87,196 @@
 
         <div class="card">
             <div class="card-title">Pass Rate</div>
-            <div class="card-value">87.5%</div>
+            <div class="card-value" id="passRate">-</div>
         </div>
 
         <div class="card">
             <div class="card-title">Passed</div>
-            <div class="card-value">7</div>
+            <div class="card-value" id="passed">-</div>
         </div>
 
         <div class="card">
             <div class="card-title">Failed</div>
-            <div class="card-value">0</div>
+            <div class="card-value" id="failed">-</div>
         </div>
 
         <div class="card">
             <div class="card-title">Flaky</div>
-            <div class="card-value">1</div>
+            <div class="card-value" id="flaky">-</div>
         </div>
 
         <div class="card">
             <div class="card-title">Skipped</div>
-            <div class="card-value">0</div>
+            <div class="card-value" id="skipped">-</div>
         </div>
 
         <div class="card">
             <div class="card-title">Duration</div>
-            <div class="card-value">17.5s</div>
+            <div class="card-value" id="duration">-</div>
         </div>
 
     </div>
 
+    <!-- Create the chart for displaying pass rate over time on the second section -->
+    <h2>Pass Rate Over Time</h2>
+    <div class="chart-container">
+
+        <div class="chart-header">
+            <label>
+                Time Range:
+                <select id="timeRange">
+                    <option value="10">Last 10 runs</option>
+                    <option value="20">Last 20 runs</option>
+                    <option value="30">Last 30 runs</option>
+                    <option value="90">Last 60 runs</option>
+                    <option value="90">Last 90 runs</option>
+                    <option value="all">All</option>
+                </select>
+            </label>
+        </div>
+
+        <canvas id="passRateChart"></canvas>
+
+    </div>
+
+    <!-- Load Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Load the generated historical data -->
+    <script src="data.js"></script>
+
+    <!-- Use the historical data -->
+    <script>
+        // =========================
+        // SECTION 1 - Latest Run Summary
+        // =========================
+        const latestRun = historicalRuns[0];
+
+        document.getElementById('passRate').textContent =
+            `${latestRun.passRate}%`;
+
+        document.getElementById('passed').textContent =
+            latestRun.passed;
+
+        document.getElementById('failed').textContent =
+            latestRun.failed;
+
+        document.getElementById('flaky').textContent =
+            latestRun.flaky;
+
+        document.getElementById('skipped').textContent =
+            latestRun.skipped;
+
+        document.getElementById('duration').textContent =
+            `${(latestRun.duration / 1000).toFixed(2)}s`;
+
+
+        // =========================
+        // SECTION 2 - Pass Rate Over Time
+        // =========================
+
+        const timeRange = document.getElementById('timeRange');
+        const chartCanvas = document.getElementById('passRateChart');
+
+        let passRateChart;
+
+        function getRunsForTimeRange() {
+
+            const selectedRange = timeRange.value;
+
+            if (selectedRange === 'all') {
+                return [...historicalRuns];
+            }
+
+            return historicalRuns.slice(0, Number(selectedRange));
+        }
+
+        function createChart() {
+
+            const selectedRuns = getRunsForTimeRange();
+
+            // historicalRuns is newest → oldest.
+            // Reverse it so the chart displays oldest → newest.
+            const chartRuns = [...selectedRuns].reverse();
+
+            const labels = chartRuns.map(run =>
+                `Run ${run.runNumber ?? '-'}`
+            );
+
+            const passRates = chartRuns.map(run =>
+                run.passRate
+            );
+
+            if (passRateChart) {
+                passRateChart.destroy();
+            }
+
+            passRateChart = new Chart(chartCanvas, {
+
+                type: 'line',
+
+                data: {
+                    labels: labels,
+
+                    datasets: [{
+                        data: passRates,
+                        tension: 0.3
+                    }]
+                },
+
+                options: {
+
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            top: 0,
+                            bottom: 40
+                        }
+                    },
+
+                    scales: {
+                        y: {
+                            min: 0,
+                            max: 100,
+
+                            ticks: {
+                                callback: value => `${value}%`
+                            }
+                        }
+                    },
+
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+
+                    tooltip: {
+                        displayColors: false,
+                        
+                        callbacks: {
+                            label: function(context) {
+                                const run = chartRuns[context.dataIndex];
+
+                                return [
+                                    `Pass Rate: ${run.passRate}%`,
+                                    `Total: ${run.total}`,
+                                    `Passed: ${run.passed}`,
+                                    `Failed: ${run.failed}`,
+                                    `Skipped: ${run.skipped}`,
+                                    `Flaky: ${run.flaky}`
+                                ];
+                            }
+                        }
+                    }
+                    }
+                }
+            });
+        }
+
+        createChart();
+
+        timeRange.addEventListener('change', createChart);
+    </script>
 </body>
 </html>
