@@ -49,7 +49,12 @@ jobs:
       
       - name: Parse Playwright results
         run: node scripts/generate-playwright-analytics.js    
-        
+        env:
+          PLAYWRIGHT_RUN_ID: ${{ github.event.workflow_run.id }}
+          PLAYWRIGHT_RUN_NUMBER: ${{ github.event.workflow_run.run_number }}
+          PLAYWRIGHT_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          PLAYWRIGHT_TRIGGER: ${{ github.event.workflow_run.event }}
+          
       - name: Save historical result
         run: |
           git config user.name "github-actions[bot]"
