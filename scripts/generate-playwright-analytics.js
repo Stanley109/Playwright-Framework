@@ -38,11 +38,11 @@ const passRate = total === 0
     : Number(((passed / total) * 100).toFixed(2));
 
 const result = {
-    runId: process.env.GITHUB_RUN_ID || null,
-    runNumber: process.env.GITHUB_RUN_NUMBER || null,
+    runId: process.env.PLAYWRIGHT_RUN_ID || null,
+    runNumber: process.env.PLAYWRIGHT_RUN_NUMBER || null,
     timestamp: new Date().toISOString(),
-    branch: process.env.GITHUB_REF_NAME || null,
-    trigger: process.env.GITHUB_EVENT_NAME || null,
+    branch: process.env.PLAYWRIGHT_BRANCH || null,
+    trigger: process.env.PLAYWRIGHT_TRIGGER || null,
 
     total,
     passed,
