@@ -44,6 +44,9 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}                                  #specify the repository to pinpoint the name of the artifact to download. 
           run-id: ${{ github.event.workflow_run.id }}                           #specify the run-id to pinpoint the name of the artifact to download. This is the run number of the Playwright CI workflow that triggered this deploy-pages workflow.
+      
+      - name: Parse Playwright results
+        run: node scripts/parse-playwright-results.js                         
 
       - name: Setup Pages       
         uses: actions/configure-pages@v5                #"I'm preparing something that will be deployed using GitHub Pages."
