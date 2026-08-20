@@ -8,7 +8,7 @@ const report = JSON.parse(
 
 const total = report.stats.expected
     + report.stats.unexpected
-    + report.stats.skipped;
+    + report.stats.skipped
     + report.stats.flaky;
 
 const flaky = report.stats.flaky;
