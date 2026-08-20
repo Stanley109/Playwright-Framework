@@ -1,0 +1,14 @@
+{
+  "runId": "32395610917",
+  "runNumber": "32",
+  "timestamp": "2026-08-20T17:05:07.371Z",
+  "branch": "master",
+  "trigger": "workflow_run",
+  "total": 9,
+  "passed": 7,
+  "failed": 0,
+  "skipped": 0,
+  "flaky": 2,
+  "passRate": 77.78,
+  "duration": 34350.796
+}
