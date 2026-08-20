@@ -20,7 +20,13 @@ const passRate = total === 0
     ? 0
     : Number(((passed / total) * 100).toFixed(2));
 
-console.log({
+const result = {
+    runId: process.env.GITHUB_RUN_ID || null,
+    runNumber: process.env.GITHUB_RUN_NUMBER || null,
+    timestamp: new Date().toISOString(),
+    branch: process.env.GITHUB_REF_NAME || null,
+    trigger: process.env.GITHUB_EVENT_NAME || null,
+
     total,
     passed,
     failed,
@@ -28,4 +34,15 @@ console.log({
     flaky,
     passRate,
     duration: report.stats.duration
-});
+};
+
+console.log(result);
+
+fs.mkdirSync('./playwright_results', { recursive: true });
+
+const filename = `${result.timestamp.replace(/[:.]/g, '-')}.json`;
+
+fs.writeFileSync(
+    `./playwright_results/${filename}`,
+    JSON.stringify(result, null, 2)
+);
