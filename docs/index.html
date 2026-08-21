@@ -197,6 +197,7 @@
                     <th>ENV</th>
                     <th>Suite</th>
                     <th>Trigger</th>
+                    <th>Pass %</th>
                     <th>Total</th>
                     <th>Passed</th>
                     <th>Failed</th>
@@ -381,6 +382,7 @@
                     <td>${run.env ?? '-'}</td>
                     <td>${run.suite ?? '-'}</td>
                     <td>${run.trigger ?? '-'}</td>
+                    <td>${run.passRate}%</td>
                     <td>${run.total}</td>
                     <td>${run.passed}</td>
                     <td>${run.failed}</td>
