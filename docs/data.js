@@ -1,5 +1,19 @@
 const historicalRuns = [
   {
+    "runId": "32459339726",
+    "runNumber": "87",
+    "timestamp": "2026-08-21T07:37:13.339Z",
+    "branch": "master",
+    "trigger": "push",
+    "total": 9,
+    "passed": 9,
+    "failed": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "passRate": 100,
+    "duration": 15309.689
+  },
+  {
     "runId": "32453589804",
     "runNumber": "86",
     "timestamp": "2026-08-21T06:15:50.278Z",
