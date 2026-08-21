@@ -73,7 +73,9 @@ jobs:
             - name: Run ${{github.event.inputs.suite}} tests
               run: npx playwright test --grep '@${{github.event.inputs.suite || 'smoke'}}'  #when automatically triggered via push, the github.even.inputs.suite will be empty since it's not manual. Therefore we have to put the default value 'smoke'
             
-            - name: Create analytics metadata
+            - name: Create analytics metadata  
+              #We need this if:always(). Otherwise if some tests fail in the previous step, this step will be skipped.                                   
+              if: always()                                                                  
               run: |
                     cat <<EOF > analytics-metadata.json
                     {
@@ -84,6 +86,8 @@ jobs:
 
             - name: Upload analytics metadata
               uses: actions/upload-artifact@v4
+              #We need this if:always(). Otherwise if some tests fail in the previous steps, this step will be skipped. 
+              if: always()
               with:
                     name: analytics-metadata-${{ github.run_number }}
                     path: analytics-metadata.json
