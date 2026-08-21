@@ -41,12 +41,21 @@ jobs:
       - name: Download Playwright JSON
         uses: actions/download-artifact@v4                                      # download an artifact
         with:
-          name: playwright-json-${{ github.event.workflow_run.run_number }}     # download the artifact that was uploaded by Playwright CI workflow. This is the exact name of the artifact after running in github actions
-          path: ./data                                                          # uploads the artifact to the github runner's ./data folder. We cannot see the artifact in our local repo because it is only available in the github runner's file system.                                         
+          name: playwright-json-${{ github.event.workflow_run.run_number }}     # download the artifact number that contains the json file that was uploaded by Playwright CI workflow.
+          path: ./data                                                          # uploads the contents of the artifact (playwright-report.json) to the github runner's ./data folder. We cannot see the artifact in our local repo because it is only available in the github runner's file system.                                         
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}                                  #specify the repository to pinpoint the name of the artifact to download. 
           run-id: ${{ github.event.workflow_run.id }}                           #specify the run-id to pinpoint the artifact from the specific Playwright CI run that triggered this deploy-pages workflow.
       
+      - name: Download analytics metadata                                       # download analytics metadata that was uploaded by Playwright CI workflow. This metadata contains the environment and suite that was used in the Playwright CI run.
+        uses: actions/download-artifact@v4
+        with:
+          name: analytics-metadata-${{ github.event.workflow_run.run_number }}
+          path: ./data
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
+
       - name: Parse Playwright results
         run: node scripts/generate-playwright-analytics.js    
         env:

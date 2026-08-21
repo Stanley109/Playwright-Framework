@@ -38,7 +38,7 @@ jobs:
             image: mcr.microsoft.com/playwright:v1.61.0-noble        #the version has to be exactly the same as in the package.json file. Also, since we're pulling a docker image, we don't need to install browsers anymore ( run: npx playwright install --with-deps)
             options: --user root
         timeout-minutes: 60
-        environment: ${{ github.event.inputs.environment || 'sit' }}
+        environment: ${{ github.event.inputs.environment || 'sit' }}     #This is to set GitHub Actions Environment located at settings > Environments.
 
         env:
             CI: true
@@ -70,9 +70,24 @@ jobs:
                 echo "BASE_URL is: $BASE_URL"
                 echo "ENV_TEST_MSG is: $ENV_TEST_MSG"
               
-
             - name: Run ${{github.event.inputs.suite}} tests
               run: npx playwright test --grep '@${{github.event.inputs.suite || 'smoke'}}'  #when automatically triggered via push, the github.even.inputs.suite will be empty since it's not manual. Therefore we have to put the default value 'smoke'
+            
+            - name: Create analytics metadata
+              run: |
+                    cat <<EOF > analytics-metadata.json
+                    {
+                    "environment": "${{ github.event.inputs.environment || 'sit' }}",
+                    "suite": "${{ github.event.inputs.suite || 'smoke' }}"
+                    }
+                    EOF
+
+            - name: Upload analytics metadata
+              uses: actions/upload-artifact@v4
+              with:
+                    name: analytics-metadata-${{ github.run_number }}
+                    path: analytics-metadata.json
+                    retention-days: 7
 
             - name: Upload monocart HTML report
               uses: actions/upload-artifact@v4
