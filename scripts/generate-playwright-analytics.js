@@ -23,6 +23,10 @@ const report = JSON.parse(
     fs.readFileSync(reportPath, 'utf8')
 );
 
+const metadata = JSON.parse(
+    fs.readFileSync('./data/analytics-metadata.json', 'utf8')
+);
+
 const total = report.stats.expected
     + report.stats.unexpected
     + report.stats.skipped
@@ -42,6 +46,8 @@ const result = {
     runNumber: process.env.PLAYWRIGHT_RUN_NUMBER || null,
     timestamp: new Date().toISOString(),
     branch: process.env.PLAYWRIGHT_BRANCH || null,
+    env: metadata.environment || null,
+    suite: metadata.suite || null,
     trigger: process.env.PLAYWRIGHT_TRIGGER || null,
 
     total,
