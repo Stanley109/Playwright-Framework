@@ -59,7 +59,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add playwright_results/
+          git add playwright_results/ docs/data.js
           git commit -m "Add Playwright run ${{ github.event.workflow_run.run_number }}" || echo "No changes to commit"
           git push origin playwright-analytics
 
