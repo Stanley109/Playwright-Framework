@@ -10,8 +10,8 @@ export default defineConfig({
   expect: {timeout: 3_000},  //expect timeout for each assertion. default is 5 secs
   globalTimeout: 3_600_000,    //timeout for the whole test run. no default values here.
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 3 : 2,      //retries failed test x times. currently  CI = 3 and non-CI = 2
-  workers: process.env.CI ? 1 : 2,
+  retries: process.env.CI ? 1 : 1,      //retries failed test x times. currently  CI = 3 and non-CI = 2
+  workers: process.env.CI ? 2 : 2,
   reporter: [
     ['line'], // Terminal progress logger
     ['monocart-reporter', { name: 'Playwright Test Report', outputFile: 'monocart-report/index.html'}],   //Monocart report. also sets the name of the report
