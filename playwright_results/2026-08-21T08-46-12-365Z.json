@@ -1,0 +1,16 @@
+{
+  "runId": "32464591708",
+  "runNumber": "93",
+  "timestamp": "2026-08-21T08:46:12.365Z",
+  "branch": "master",
+  "env": "uat",
+  "suite": "regression",
+  "trigger": "workflow_dispatch",
+  "total": 15,
+  "passed": 13,
+  "failed": 1,
+  "skipped": 0,
+  "flaky": 1,
+  "passRate": 86.67,
+  "duration": 28702.909
+}
