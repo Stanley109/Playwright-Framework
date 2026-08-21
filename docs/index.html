@@ -63,15 +63,45 @@
             height: 100%;
         }
 
-        .chart-header {
+        .timeRange-header {
             display: flex;
             justify-content: flex-end;
             align-items: center;
             margin-bottom: 20px;
         }
 
-        .chart-header select {
+        .timeRange-header select {
             padding: 6px 10px;
+        }
+
+        .table-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 15px;
+            overflow-x: auto;
+        }
+
+        #historicalRunsTable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #historicalRunsTable th,
+        #historicalRunsTable td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        #historicalRunsTable th {
+            color: #666;
+            font-size: 14px;
+        }
+
+        #historicalRunsTable td {
+            font-size: 14px;
         }
     </style>
 </head>
@@ -121,14 +151,14 @@
     <h2>Pass Rate Over Time</h2>
     <div class="chart-container">
 
-        <div class="chart-header">
+        <div class="timeRange-header">
             <label>
                 Time Range:
                 <select id="timeRange">
                     <option value="10">Last 10 runs</option>
                     <option value="20">Last 20 runs</option>
                     <option value="30">Last 30 runs</option>
-                    <option value="90">Last 60 runs</option>
+                    <option value="60">Last 60 runs</option>
                     <option value="90">Last 90 runs</option>
                     <option value="all">All</option>
                 </select>
@@ -136,6 +166,50 @@
         </div>
 
         <canvas id="passRateChart"></canvas>
+
+    </div>
+
+    <!-- Historical Runs -->
+    <h2>Historical Runs</h2>
+
+    <div class="table-container">
+
+        <div class="timeRange-header">
+            <label>
+                Time Range:
+                <select id="tableTimeRange">
+                    <option value="10">Last 10 runs</option>
+                    <option value="20">Last 20 runs</option>
+                    <option value="30">Last 30 runs</option>
+                    <option value="90">Last 90 runs</option>
+                    <option value="all">All</option>
+                </select>
+            </label>
+        </div>
+
+        <table id="historicalRunsTable">
+
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Run ID</th>
+                    <th>Branch</th>
+                    <th>ENV</th>
+                    <th>Suite</th>
+                    <th>Trigger</th>
+                    <th>Total</th>
+                    <th>Passed</th>
+                    <th>Failed</th>
+                    <th>Skipped</th>
+                    <th>Flaky</th>
+                    <th>Duration</th>
+                </tr>
+            </thead>
+
+            <tbody id="historicalRunsBody">
+            </tbody>
+
+        </table>
 
     </div>
 
@@ -277,6 +351,52 @@
         createChart();
 
         timeRange.addEventListener('change', createChart);
+
+
+        // =========================
+        // SECTION 3 - Historical Runs Table
+        // =========================
+
+        const historicalRunsBody = document.getElementById('historicalRunsBody');
+        const tableTimeRange = document.getElementById('tableTimeRange');
+
+        function updateHistoricalRunsTable() {
+
+            const selectedRange = tableTimeRange.value;
+
+            const runs = selectedRange === 'all'
+                ? historicalRuns
+                : historicalRuns.slice(0, Number(selectedRange));
+
+            historicalRunsBody.innerHTML = '';
+
+            runs.forEach(run => {
+
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td>${new Date(run.timestamp).toLocaleString()}</td>
+                    <td>${run.runId ?? '-'}</td>
+                    <td>${run.branch ?? '-'}</td>
+                    <td>${run.env ?? '-'}</td>
+                    <td>${run.suite ?? '-'}</td>
+                    <td>${run.trigger ?? '-'}</td>
+                    <td>${run.total}</td>
+                    <td>${run.passed}</td>
+                    <td>${run.failed}</td>
+                    <td>${run.skipped}</td>
+                    <td>${run.flaky}</td>
+                    <td>${(run.duration / 1000).toFixed(2)}s</td>
+                `;
+
+                historicalRunsBody.appendChild(row);
+            });
+        }
+
+        updateHistoricalRunsTable();
+
+        tableTimeRange.addEventListener('change', updateHistoricalRunsTable);
+
     </script>
 </body>
 </html>

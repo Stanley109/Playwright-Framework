@@ -1,0 +1,14 @@
+{
+  "runId": null,
+  "runNumber": null,
+  "timestamp": "2026-08-20T15:42:01.362Z",
+  "branch": null,
+  "trigger": null,
+  "total": 9,
+  "passed": 8,
+  "failed": 0,
+  "skipped": 0,
+  "flaky": 1,
+  "passRate": 88.89,
+  "duration": 28681.64
+}
