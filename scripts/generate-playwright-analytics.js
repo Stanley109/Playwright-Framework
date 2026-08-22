@@ -16,15 +16,14 @@ const path = require('path');
 // IMPORTANT NOTE: YOU CANNOT SEE `reporthPath` IN YOUR LOCAL ENVIRONMENT. THIS IS ONLY VISIBLE IN THE GITHUB ACTIONS ENVIRONMENT. (refer to the master branch's deploy-pages.yml file for more information)
 // ============================================================
 
-const reportPath = './data/playwright-report.json';
-// const reportPath = 'playwright-report.json';         //enable this if you want to run this script locally, but you will need to generate the playwright-report.json file first by running the tests and saving the report.
+const reportPath = './data/playwright-report.json';    //remove the './data/ if you want to run this script locally, but you will need to generate the playwright-report.json file first by running the tests and saving the report.
 
 const report = JSON.parse(
     fs.readFileSync(reportPath, 'utf8')
 );
 
 const metadata = JSON.parse(
-    fs.readFileSync('./data/analytics-metadata.json', 'utf8')
+    fs.readFileSync('./data/analytics-metadata.json', 'utf8')   //remove the './data/ if you want to run this script locally, but you will need to generate the analytics-metadata.json file first by running the tests and saving the report.
 );
 
 const total = report.stats.expected
@@ -41,6 +40,54 @@ const passRate = total === 0
     ? 0
     : Number(((passed / total) * 100).toFixed(2));
 
+
+// Description: Process the Playwright JSON report recursively to extract test information.
+//
+// IMPORTANT NOTE:
+// Currently, the test structure for this repo is that UI-tests use test.describe()
+// while API-tests do not.
+//
+// Therefore, in the Playwright JSON report:
+// UI-tests:  Suites > Suites > Specs > Tests
+// API-tests: Suites > Specs > Tests
+//
+// The recursive processSuite() function handles both structures.
+// If a suite contains nested suites, it processes those nested suites recursively.
+
+const tests = [];
+
+const processSuite = (suite) => {
+                                              
+    for (const spec of suite.specs || []) {       // loops through each spec in the suite. If there are no specs, use an empty array [] to prevent a crash.
+                                                 
+        for (const test of spec.tests || []) {         //looping throught the actual tests
+
+            const finalResult =                        // gets the latest test attempt, so retries are represented by their final result
+                test.results[test.results.length - 1];
+
+            tests.push({
+                name: spec.title,                       //parses the test title eg. 'Random Card button is visible after 3 iterations'
+                file: spec.file,                        //parses the file location eg. 'tests-ui/smoke.spec.ts'
+                line: spec.line,                        //parses the line number of the test  eg.  '41'
+                column: spec.column,                    //parses the column number of the test  eg.  '9'
+                projectId: test.projectId,              //parses the projectId  eg. 'ui-tests' or 'api-tests'
+                status: test.status === 'expected'      //parses the status. 'expected' is 'passed' for playwright json hence we print it as 'passed'
+                    ? 'passed'
+                    : test.status,
+                duration: finalResult?.duration || 0
+            });
+        }
+    }
+
+    for (const nestedSuite of suite.suites || []) {   //This is for the UI-tests. Since our ui-tests structure is suites > suites > tests.
+        processSuite(nestedSuite);
+    }
+};
+
+for (const suite of report.suites) {    //this is the starting point of processSuite(). loop iterates through the  suites of the playwright json. there are 2: ui-tests and api-tests.
+    processSuite(suite);
+}
+
 const result = {
     runId: process.env.PLAYWRIGHT_RUN_ID || null,
     runNumber: process.env.PLAYWRIGHT_RUN_NUMBER || null,
@@ -56,7 +103,8 @@ const result = {
     skipped,
     flaky,
     passRate,
-    duration: report.stats.duration
+    duration: report.stats.duration,
+    tests
 };
 
 console.log('Current run:');
