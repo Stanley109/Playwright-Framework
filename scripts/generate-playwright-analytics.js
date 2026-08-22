@@ -64,6 +64,28 @@ const processSuite = (suite) => {
 
             const finalResult =                        // gets the latest test attempt, so retries are represented by their final result
                 test.results[test.results.length - 1];
+            
+            let status;
+            switch (test.status) {
+            case 'expected':
+                status = 'passed';
+                break;
+
+            case 'unexpected':
+                status = 'failed';
+                break;
+
+            case 'skipped':
+                status = 'skipped';
+                break;
+
+            case 'flaky':
+                status = 'flaky';
+                break;
+
+            default:
+                status = test.status;
+}
 
             tests.push({
                 name: spec.title,                       //parses the test title eg. 'Random Card button is visible after 3 iterations'
@@ -71,10 +93,10 @@ const processSuite = (suite) => {
                 line: spec.line,                        //parses the line number of the test  eg.  '41'
                 column: spec.column,                    //parses the column number of the test  eg.  '9'
                 projectId: test.projectId,              //parses the projectId  eg. 'ui-tests' or 'api-tests'
-                status: test.status === 'expected'      //parses the status. 'expected' is 'passed' for playwright json hence we print it as 'passed'
-                    ? 'passed'
-                    : test.status,
-                duration: finalResult?.duration || 0
+                status,
+                duration: finalResult?.duration || 0,               //parses the latest run duration  eg. '15.45s'
+                retries: Math.max(test.results.length - 1, 0),      //parses the number of retries  eg. '2'
+                error: finalResult?.error?.message || null          //parses the error if failed eg. 'TimeoutError: locator.click: Timeout 2000ms exceeded.'
             });
         }
     }

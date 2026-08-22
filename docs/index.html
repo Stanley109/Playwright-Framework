@@ -166,12 +166,18 @@
             width: 16%;
         }
 
+        .latest-run-link {
+            margin-left: 10px;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
     </style>
 </head>
 
 <body>
     <!-- Create the cards for displaying analytics data  on the first section -->
-    <h2>Playwright Analytics</h2>
+    <h2>Automation Test Run Analytics</h2>
     <div class="tabs">
         <button class="tab-button active" onclick="showTab('overview', this)">
             Overview
@@ -293,7 +299,12 @@
     
     <!--THIS IS THE SECOND TAB-->
     <div id="recentRun" class="tab-content">
-        <h3>Recent Run Overview</h3>
+        <h3>
+            Recent Run Overview
+            <a id="latestRunLink" class="latest-run-link" href="#" target="_blank">
+                View GitHub Action
+            </a>
+        </h3>
 
         <div class="cards">
 
@@ -626,6 +637,9 @@
             button.classList.add('active');
         }
 
+        document.getElementById('latestRunLink').href =
+        `https://github.com/Stanley109/Playwright-Framework/actions/runs/${latestRun.runId}`;
+
         document.getElementById('latestTimestamp').textContent =
             new Date(latestRun.timestamp).toLocaleString();
 
@@ -704,7 +718,7 @@
                     <td>${test.line}</td>
                     <td>${statusIcon} ${test.status}</td>
                     <td>${(test.duration / 1000).toFixed(2)}s</td>
-                    <td>${test.retries ?? '-'}</td>
+                    <td>${test.retries}</td>
                     <td>${test.error ?? '-'}</td>
                 `;
 
