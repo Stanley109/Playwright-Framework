@@ -43,7 +43,7 @@
         }
 
         .card-value {
-            color: #422f83;
+            color: #6840ec;
             font-size: 28px;
             font-weight: bold;
         }
@@ -55,12 +55,21 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             margin-top: 15px;
             height: 600px;
+            box-sizing: border-box;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chart-container h3 {
+            margin: 0 0 10px 0;
         }
 
         #passRateChart {
             display: block;
             width: 100%;
-            height: 100%;
+            flex: 1;
+            min-height: 0;
         }
 
         .timeRange-header {
@@ -104,23 +113,35 @@
             font-size: 14px;
         }
 
+        .table-container h3 {
+            margin: 0 0 10px 0;
+        }
+
         .tabs {
             display: flex;
-            gap: 10px;
+            gap: 5px;
             margin-bottom: 30px;
+            border-bottom: 1px solid #ddd;
         }
 
         .tab-button {
             padding: 10px 20px;
             border: none;
-            border-radius: 6px;
-            background: #ddd;
+            background: transparent;
+            color: #666;
             cursor: pointer;
+            font-size: 15px;
+
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-button:hover {
+            color: #3e05f7;
         }
 
         .tab-button.active {
-            background: #3e05f7;
-            color: white;
+            color: #3e05f7;
+            border-bottom: 3px solid #3e05f7;
         }
 
         .tab-content {
@@ -129,6 +150,15 @@
 
         .tab-content.active {
             display: block;
+        }
+        
+        .test-table th {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .test-table th:hover {
+            background: #f5f5f5;
         }
 
         .test-table th:nth-child(1),
@@ -166,10 +196,33 @@
             width: 16%;
         }
 
+        .test-section h3 {
+            margin: 0 0 30px 0;
+        }
+
         .latest-run-link {
             margin-left: 10px;
             font-size: 14px;
             font-weight: normal;
+        }
+
+        .recent-run-cards {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .recent-run-cards .card {
+            padding: 12px;
+        }
+
+        .recent-run-cards .card-title {
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .recent-run-cards .card-value {
+            font-size: 20px;
         }
 
     </style>
@@ -227,9 +280,9 @@
         </div>
 
         <!-- Create the chart for displaying pass rate over time on the second section -->
-        <h3>Pass Rate Over Time</h3>
+        
         <div class="chart-container">
-
+            <h3>Pass Rate Over Time</h3>
             <div class="timeRange-header">
                 <label>
                     Time Range:
@@ -249,10 +302,9 @@
         </div>
 
         <!-- Historical Runs -->
-        <h3>Historical Runs</h3>
 
         <div class="table-container">
-
+            <h3>Historical Runs</h3>
             <div class="timeRange-header">
                 <label>
                     Time Range:
@@ -301,12 +353,27 @@
     <div id="recentRun" class="tab-content">
         <h3>
             Recent Run Overview
-            <a id="latestRunLink" class="latest-run-link" href="#" target="_blank">
-                View GitHub Action
+            <a id="latestRunLink"
+                class="latest-run-link"
+                href="#"
+                target="_blank"
+                title="View GitHub Action"
+                aria-label="View GitHub Action">
+
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+
+                        <path d="M14 3h7v7"></path>
+                        <path d="M10 14L21 3"></path>
+                        <path d="M21 14v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6"></path>
+
+                    </svg>
+
             </a>
         </h3>
 
-        <div class="cards">
+        <div class="recent-run-cards">
 
             <div class="card">
                 <div class="card-title">Timestamp</div>
@@ -377,10 +444,9 @@
 
 
         <!--THIS IS THE SECOND TAB  - TABLE SECTION # 1 !-->
-        <h3>UI Tests</h3>
+        <div class="table-container test-section">
 
-        <div class="table-container">
-
+            <h3>UI Tests</h3>
             <table id="uiTestsTable" class="test-table">
 
                 <thead>
@@ -403,10 +469,9 @@
         </div>
 
         <!--THIS IS THE SECOND TAB  - TABLE SECTION # 2 !-->
-        <h3>API Tests</h3>
+        <div class="table-container test-section">
 
-        <div class="table-container">
-
+            <h3>API Tests</h3>
             <table id="apiTestsTable" class="test-table">
 
                 <thead>
@@ -726,8 +791,65 @@
             });
         }
 
+        function setupSorting(tableId, tests, tableBody) {
+
+            const table = document.getElementById(tableId);
+
+            table.querySelectorAll('th').forEach((header, index) => {
+
+                let ascending = true;
+
+                header.addEventListener('click', () => {
+
+                    const sortedTests = [...tests].sort((a, b) => {
+
+                        const columns = [
+                            'name',
+                            'file',
+                            'line',
+                            'status',
+                            'duration',
+                            'retries',
+                            'error'
+                        ];
+
+                        const valueA = a[columns[index]] ?? '';
+                        const valueB = b[columns[index]] ?? '';
+
+                        let result;
+
+                        if (typeof valueA === 'number') {
+                            result = valueA - valueB;
+                        } else {
+                            result = String(valueA)
+                                .localeCompare(String(valueB));
+                        }
+
+                        return ascending ? result : -result;
+                    });
+
+                    populateTestTable(sortedTests, tableBody);
+
+                    // Remove arrows from all headers
+                    table.querySelectorAll('th').forEach(th => {
+                        th.textContent = th.textContent.replace(/ [↑↓]$/, '');
+                    });
+
+                    // Add arrow to the clicked header
+                    header.textContent =
+                        `${header.textContent} ${ascending ? '↑' : '↓'}`;
+
+                    ascending = !ascending;
+                });
+
+            });
+        }
+
         populateTestTable(uiTests, uiTestsBody);
         populateTestTable(apiTests, apiTestsBody);
+
+        setupSorting('uiTestsTable', uiTests, uiTestsBody);
+        setupSorting('apiTestsTable', apiTests, apiTestsBody);
 
     </script>
 </body>
