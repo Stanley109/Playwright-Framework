@@ -1,5 +1,122 @@
 const historicalRuns = [
   {
+    "runId": "32917009253",
+    "runNumber": "101",
+    "timestamp": "2026-08-26T00:57:09.378Z",
+    "branch": "master",
+    "env": "sit",
+    "suite": "smoke",
+    "trigger": "schedule",
+    "total": 9,
+    "passed": 2,
+    "failed": 3,
+    "skipped": 3,
+    "flaky": 1,
+    "passRate": 22.22,
+    "duration": 13762.449999999999,
+    "tests": [
+      {
+        "name": "Next button is visible",
+        "file": "tests-ui/smoke.spec.ts",
+        "line": 20,
+        "column": 9,
+        "projectId": "ui-tests",
+        "status": "passed",
+        "duration": 3837,
+        "retries": 0,
+        "error": null
+      },
+      {
+        "name": "Previous button is visible",
+        "file": "tests-ui/smoke.spec.ts",
+        "line": 26,
+        "column": 9,
+        "projectId": "ui-tests",
+        "status": "failed",
+        "duration": 1190,
+        "retries": 1,
+        "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m"
+      },
+      {
+        "name": "Random Card button is visible after 3 iterations",
+        "file": "tests-ui/smoke.spec.ts",
+        "line": 31,
+        "column": 9,
+        "projectId": "ui-tests",
+        "status": "flaky",
+        "duration": 4616,
+        "retries": 1,
+        "error": null
+      },
+      {
+        "name": "Card counter increases or decreases accordingly",
+        "file": "tests-ui/smoke.spec.ts",
+        "line": 44,
+        "column": 9,
+        "projectId": "ui-tests",
+        "status": "failed",
+        "duration": 3096,
+        "retries": 1,
+        "error": "TimeoutError: locator.click: Timeout 2000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Random Card\")')\u001b[22m\n"
+      },
+      {
+        "name": "Parse some json data and random generation data",
+        "file": "tests-ui/smoke.spec.ts",
+        "line": 56,
+        "column": 9,
+        "projectId": "ui-tests",
+        "status": "passed",
+        "duration": 1034,
+        "retries": 0,
+        "error": null
+      },
+      {
+        "name": "Get Articles",
+        "file": "tests-api/api-tests.spec.ts",
+        "line": 20,
+        "column": 5,
+        "projectId": "api-tests",
+        "status": "failed",
+        "duration": 0,
+        "retries": 0,
+        "error": "TimeoutError: apiRequestContext.post: Timeout 2000ms exceeded.\nCall log:\n\u001b[2m  - → POST https://conduit-api.bondaracademy.com/api/users/login\u001b[22m\n\u001b[2m    - user-agent: Playwright/1.61.1 (x64; ubuntu 24.04) node/22.23 CI/1\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - content-type: application/json\u001b[22m\n\u001b[2m    - content-length: 60\u001b[22m\n"
+      },
+      {
+        "name": "Get Test Tags",
+        "file": "tests-api/api-tests.spec.ts",
+        "line": 34,
+        "column": 5,
+        "projectId": "api-tests",
+        "status": "skipped",
+        "duration": 0,
+        "retries": 0,
+        "error": null
+      },
+      {
+        "name": "Create and Delete Article",
+        "file": "tests-api/api-tests.spec.ts",
+        "line": 45,
+        "column": 5,
+        "projectId": "api-tests",
+        "status": "skipped",
+        "duration": 0,
+        "retries": 0,
+        "error": null
+      },
+      {
+        "name": "Create, Update, then Delete Article",
+        "file": "tests-api/api-tests.spec.ts",
+        "line": 92,
+        "column": 5,
+        "projectId": "api-tests",
+        "status": "skipped",
+        "duration": 0,
+        "retries": 0,
+        "error": null
+      }
+    ]
+  },
+  {
     "runId": "32795486525",
     "runNumber": "100",
     "timestamp": "2026-08-25T00:55:51.941Z",
