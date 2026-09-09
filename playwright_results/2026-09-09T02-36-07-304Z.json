@@ -1,0 +1,117 @@
+{
+  "runId": "34303781816",
+  "runNumber": "118",
+  "timestamp": "2026-09-09T02:36:07.304Z",
+  "branch": "master",
+  "env": "sit",
+  "suite": "smoke",
+  "trigger": "schedule",
+  "total": 9,
+  "passed": 6,
+  "failed": 1,
+  "skipped": 0,
+  "flaky": 2,
+  "passRate": 66.67,
+  "duration": 19064.952999999998,
+  "tests": [
+    {
+      "name": "Next button is visible",
+      "file": "tests-ui/smoke.spec.ts",
+      "line": 20,
+      "column": 9,
+      "projectId": "ui-tests",
+      "status": "flaky",
+      "duration": 3023,
+      "retries": 1,
+      "error": null
+    },
+    {
+      "name": "Previous button is visible",
+      "file": "tests-ui/smoke.spec.ts",
+      "line": 26,
+      "column": 9,
+      "projectId": "ui-tests",
+      "status": "failed",
+      "duration": 876,
+      "retries": 1,
+      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m"
+    },
+    {
+      "name": "Random Card button is visible after 3 iterations",
+      "file": "tests-ui/smoke.spec.ts",
+      "line": 31,
+      "column": 9,
+      "projectId": "ui-tests",
+      "status": "passed",
+      "duration": 4792,
+      "retries": 0,
+      "error": null
+    },
+    {
+      "name": "Card counter increases or decreases accordingly",
+      "file": "tests-ui/smoke.spec.ts",
+      "line": 44,
+      "column": 9,
+      "projectId": "ui-tests",
+      "status": "flaky",
+      "duration": 6791,
+      "retries": 1,
+      "error": null
+    },
+    {
+      "name": "Parse some json data and random generation data",
+      "file": "tests-ui/smoke.spec.ts",
+      "line": 56,
+      "column": 9,
+      "projectId": "ui-tests",
+      "status": "passed",
+      "duration": 963,
+      "retries": 0,
+      "error": null
+    },
+    {
+      "name": "Get Articles",
+      "file": "tests-api/api-tests.spec.ts",
+      "line": 20,
+      "column": 5,
+      "projectId": "api-tests",
+      "status": "passed",
+      "duration": 1169,
+      "retries": 0,
+      "error": null
+    },
+    {
+      "name": "Get Test Tags",
+      "file": "tests-api/api-tests.spec.ts",
+      "line": 34,
+      "column": 5,
+      "projectId": "api-tests",
+      "status": "passed",
+      "duration": 156,
+      "retries": 0,
+      "error": null
+    },
+    {
+      "name": "Create and Delete Article",
+      "file": "tests-api/api-tests.spec.ts",
+      "line": 45,
+      "column": 5,
+      "projectId": "api-tests",
+      "status": "passed",
+      "duration": 443,
+      "retries": 0,
+      "error": null
+    },
+    {
+      "name": "Create, Update, then Delete Article",
+      "file": "tests-api/api-tests.spec.ts",
+      "line": 92,
+      "column": 5,
+      "projectId": "api-tests",
+      "status": "passed",
+      "duration": 490,
+      "retries": 0,
+      "error": null
+    }
+  ]
+}
